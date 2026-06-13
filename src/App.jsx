@@ -1,16 +1,12 @@
 import {
   ArrowUpRight,
-  Bot,
-  BrainCircuit,
   Code2,
-  Database,
   ExternalLink,
   Github,
   GitBranch,
   Linkedin,
   Mail,
   Menu,
-  Server,
   Zap,
 } from "lucide-react";
 import gsap from "gsap";
@@ -184,25 +180,25 @@ const metrics = [
 
 const stackPillars = [
   {
-    icon: BrainCircuit,
+    logo: "agentic",
     title: "Agentic Workflows",
     body: "Engineered multi-step AI automation, real-time transcription analysis, and predictive follow-up logic for CallIQ.",
     tools: ["Agent workflows", "Call IQ", "Azure"],
   },
   {
-    icon: Server,
+    logo: "mern",
     title: "Full-Stack SaaS",
     body: "Built low-latency, context-aware platforms using the MERN stack, Gemini Pro, and secure JWT authentication.",
     tools: ["MERN", "Gemini Pro", "JWT"],
   },
   {
-    icon: Database,
+    logo: "backend",
     title: "Java Backend Systems",
     body: "Java internship experience with Core Java, J2EE, MySQL, OOP, debugging, and backend workflow fundamentals.",
     tools: ["Java", "J2EE", "MySQL"],
   },
   {
-    icon: Bot,
+    logo: "rag",
     title: "GenAI Orchestration",
     body: "Architected asynchronous media pipelines utilizing TTS, avatar synthesis, RAG methodologies, and Azure cloud infrastructure.",
     tools: ["TTS", "RAG", "Azure"],
@@ -328,8 +324,8 @@ function Header() {
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#experience">Experience</a>
-        <a href="#stack">Stack</a>
         <a href="#work">Work</a>
+        <a href="#stack">Stack</a>
         <a href="#contact">Contact</a>
       </nav>
       <button className="pointer-events-auto rounded-full border border-white/40 p-2 md:hidden" aria-label="Open menu">
@@ -834,9 +830,11 @@ function Stack() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        {stackPillars.map(({ icon: Icon, title, body, tools }) => (
+        {stackPillars.map(({ logo, title, body, tools }) => (
           <article key={title} className="stack-card min-h-[360px] border border-white/15 bg-white/[0.035] p-6 backdrop-blur">
-            <Icon className="mb-8 text-signal" size={32} strokeWidth={2.4} />
+            <div className="stack-logo mb-8">
+              <SkillLogo type={logo} />
+            </div>
             <h3 className="text-3xl font-black leading-none">{title}</h3>
             <p className="mt-5 text-base font-bold leading-tight text-bone/62">{body}</p>
             <div className="mt-8 flex flex-wrap gap-2">
@@ -1420,9 +1418,9 @@ export default function App() {
         <Manifesto />
         <Skills />
         <Experience />
-        <Stack />
-        <Services />
         <Work />
+        <Services />
+        <Stack />
         <Principles />
         <Closing />
       </main>

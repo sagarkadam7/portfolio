@@ -26,6 +26,7 @@ body {
 
 img {
   display: block;
+  max-width: 100%;
 }
 
 a {
@@ -463,24 +464,156 @@ a {
 }
 
 @media (max-width: 767px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .hero-stage::after {
     background-size: 42px 42px;
   }
 
+  .hero-media {
+    height: calc(100svh + 24px);
+  }
+
   .hero-title--cinematic {
-    max-width: 7.5ch;
+    max-width: 8ch;
   }
 
   .hero-line--ghost {
     -webkit-text-stroke-width: 0.6px;
   }
 
+  .hero-panel {
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 1.25rem 0 0;
+  }
+
+  .hero-panel > div:first-child {
+    display: none;
+  }
+
+  .hero-proof {
+    grid-template-columns: 1fr;
+  }
+
+  .about-section,
+  .skills-section,
+  .experience-section,
+  .stack-section,
+  .service-section,
+  .principles-section,
+  .closing-stage {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .about-main {
+    gap: 2rem;
+  }
+
+  .about-headline,
+  .skills-title,
+  .experience-title,
+  .stack-title,
+  .work-headline,
+  .principles-title,
+  .closing-title {
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  .skill-card,
+  .stack-card {
+    min-height: 300px;
+  }
+
+  .service-card {
+    min-height: auto;
+  }
+
+  .service-image-wrap {
+    min-height: 260px;
+  }
+
   .work-track {
     max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1rem;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
   }
 
   .project-card {
-    min-height: 440px;
+    width: min(86vw, 360px);
+    min-height: 460px;
     max-height: none;
+    scroll-snap-align: start;
+  }
+
+  .work-pin {
+    min-height: auto;
+  }
+
+  .experience-row {
+    cursor: default;
+  }
+
+  .principle-row {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-title--cinematic {
+    max-width: 7.4ch;
+  }
+
+  .hero-line--signal {
+    letter-spacing: -0.09em;
+  }
+
+  .hero-cta a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-chips,
+  .skills-ribbon {
+    gap: 0.45rem;
+  }
+
+  .hero-proof-item p:first-child {
+    font-size: 1.65rem;
+  }
+
+  .project-card {
+    width: 88vw;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-title--cinematic {
+    max-width: 9ch;
+  }
+
+  .work-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .project-card {
+    width: min(64vw, 520px);
+    scroll-snap-align: start;
+  }
+
+  .work-pin {
+    min-height: auto;
   }
 }

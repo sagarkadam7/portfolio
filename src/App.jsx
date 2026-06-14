@@ -6,7 +6,6 @@ import {
   GitBranch,
   Linkedin,
   Mail,
-  Menu,
   Zap,
 } from "lucide-react";
 import gsap from "gsap";
@@ -328,9 +327,9 @@ function Header() {
         <a href="#stack">Stack</a>
         <a href="#contact">Contact</a>
       </nav>
-      <button className="pointer-events-auto rounded-full border border-white/40 p-2 md:hidden" aria-label="Open menu">
-        <Menu size={18} />
-      </button>
+      <a className="pointer-events-auto rounded-full border border-white/35 px-3 py-2 text-[10px] font-black uppercase md:hidden" href="#contact">
+        Contact
+      </a>
     </header>
   );
 }
@@ -758,11 +757,7 @@ function Experience() {
                     </div>
                     <p className="experience-part mt-2 text-sm font-black uppercase text-bone/75 md:text-base">{role.role}</p>
                     <p className="experience-part mt-2 text-xs font-black uppercase text-signal">{role.highlight}</p>
-                    <p
-                      className={`experience-part mt-5 max-w-3xl text-base font-bold leading-tight text-bone/62 transition-all duration-500 md:text-lg ${
-                        isActive ? "max-h-40 opacity-100" : "max-h-0 overflow-hidden opacity-0 md:max-h-16 md:opacity-70"
-                      }`}
-                    >
+                    <p className="experience-part mt-5 max-w-3xl text-base font-bold leading-tight text-bone/62 transition-all duration-500 md:text-lg">
                       {role.body}
                     </p>
                     <div className="experience-part mt-5 flex flex-wrap gap-2">
@@ -1244,7 +1239,7 @@ function useGsapAnimations(rootRef) {
 
       const track = document.querySelector(".work-track");
       if (track) {
-        const distance = () => -Math.max(0, track.scrollWidth - window.innerWidth + 40);
+        const isMobileWork = window.matchMedia("(max-width: 1023px)").matches;
         gsap.to(".project-card", {
           y: 0,
           rotate: 0,
@@ -1257,19 +1252,22 @@ function useGsapAnimations(rootRef) {
             start: "top 70%",
           },
         });
-        gsap.to(track, {
-          x: distance,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".work-pin",
-            start: "top top",
-            end: () => `+=${Math.max(track.scrollWidth, window.innerWidth * 2)}`,
-            scrub: 1,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        });
+        if (!isMobileWork) {
+          const distance = () => -Math.max(0, track.scrollWidth - window.innerWidth + 40);
+          gsap.to(track, {
+            x: distance,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".work-pin",
+              start: "top top",
+              end: () => `+=${Math.max(track.scrollWidth, window.innerWidth * 2)}`,
+              scrub: 1,
+              pin: true,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+        }
       }
 
       gsap.to(".experience-label", {

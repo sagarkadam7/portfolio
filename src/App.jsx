@@ -284,33 +284,49 @@ const stackPillars = [
     tools: ["Agent workflows", "Call IQ", "Azure"],
   },
   {
+    logo: "llm",
+    title: "LLMs & RAG",
+    body: "Retrieval-augmented systems on cloud and local LLMs — grounded answers, embeddings, and pipelines that keep humans in the loop.",
+    tools: ["Local LLMs", "RAG", "Embeddings"],
+  },
+  {
     logo: "mern",
     title: "Full-Stack SaaS",
     body: "Built low-latency, context-aware platforms using the MERN stack, Gemini Pro, and secure JWT authentication.",
     tools: ["MERN", "Gemini Pro", "JWT"],
   },
   {
-    logo: "backend",
-    title: "Java Backend Systems",
-    body: "Java internship experience with Core Java, J2EE, MySQL, OOP, debugging, and backend workflow fundamentals.",
-    tools: ["Java", "J2EE", "MySQL"],
-  },
-  {
-    logo: "rag",
-    title: "GenAI Orchestration",
-    body: "Architected asynchronous media pipelines utilizing TTS, avatar synthesis, RAG methodologies, and Azure cloud infrastructure.",
-    tools: ["TTS", "RAG", "Azure"],
+    logo: "seo",
+    title: "Next.js & SEO",
+    body: "Server-rendered Next.js apps with technical SEO — metadata, structured data, and Core Web Vitals — so products get found.",
+    tools: ["Next.js", "Technical SEO", "Web Vitals"],
   },
 ];
 
 const skillGroups = [
   {
-    logo: "frontend",
-    label: "Frontend",
-    title: "Interfaces that feel fast",
-    focus: "Primary strength",
-    image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1200&q=85",
-    skills: ["React", "JavaScript", "Tailwind CSS", "Framer Motion", "GSAP", "Responsive UI"],
+    logo: "agentic",
+    label: "Agentic AI",
+    title: "Multi-step AI agents",
+    focus: "Core focus",
+    image: "https://images.unsplash.com/photo-1674027444485-cec3da58eef4?auto=format&fit=crop&w=1200&q=85",
+    skills: ["Agent workflows", "LLM orchestration", "Multi-step automation", "Human-in-the-loop", "Gemini API"],
+  },
+  {
+    logo: "llm",
+    label: "LLMs",
+    title: "Cloud and local models",
+    focus: "Model layer",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=85",
+    skills: ["LLMs", "Local LLMs", "Open-source models", "Prompt engineering", "AI vision", "Gemini"],
+  },
+  {
+    logo: "rag",
+    label: "RAG + GenAI",
+    title: "Context-aware AI systems",
+    focus: "Grounded answers",
+    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85",
+    skills: ["RAG", "Embeddings", "Vector search", "Prompt design", "TTS", "AI avatars"],
   },
   {
     logo: "mern",
@@ -321,40 +337,35 @@ const skillGroups = [
     skills: ["MongoDB", "Express", "React", "Node.js", "JWT Auth", "REST APIs"],
   },
   {
-    logo: "agentic",
-    label: "Agentic AI",
-    title: "Multi-step AI workflows",
-    focus: "CallIQ experience",
-    image: "https://images.unsplash.com/photo-1674027444485-cec3da58eef4?auto=format&fit=crop&w=1200&q=85",
-    skills: ["Agent workflows", "LLM orchestration", "Transcription analysis", "Follow-up logic", "Gemini API"],
-  },
-  {
-    logo: "rag",
-    label: "RAG + GenAI",
-    title: "Context-aware AI systems",
-    focus: "AI pipelines",
-    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85",
-    skills: ["RAG", "Embeddings", "Prompt design", "TTS", "AI avatars", "Human review loops"],
-  },
-  {
-    logo: "backend",
-    label: "Backend",
-    title: "APIs, data, and auth",
-    focus: "Reliable foundations",
+    logo: "seo",
+    label: "Next.js + SEO",
+    title: "Fast, findable web apps",
+    focus: "Ranking & performance",
     image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1200&q=85",
-    skills: ["PHP", "Laravel", "Java", "J2EE", "MySQL", "Database design"],
+    skills: ["Next.js", "SSR / SSG", "Technical SEO", "Core Web Vitals", "Structured data", "Open Graph"],
   },
   {
-    logo: "cloud",
-    label: "Cloud + Tools",
-    title: "Deployable engineering",
-    focus: "Shipping workflow",
-    image: "https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&w=1200&q=85",
-    skills: ["Azure", "Render", "Vercel", "GitHub", "OAuth 2.0", "Open Source"],
+    logo: "frontend",
+    label: "Frontend + Cloud",
+    title: "Polished, shipped interfaces",
+    focus: "Delivery",
+    image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1200&q=85",
+    skills: ["React", "Tailwind CSS", "GSAP", "Framer Motion", "Vercel", "Azure"],
   },
 ];
 
-const skillHighlights = ["Frontend", "MERN", "Agentic AI", "RAG", "PHP", "Laravel", "Java", "Azure", "Gemini", "GSAP"];
+const skillHighlights = [
+  "Agentic AI",
+  "LLMs",
+  "Local LLMs",
+  "RAG",
+  "MERN",
+  "Next.js",
+  "SEO",
+  "React",
+  "Node.js",
+  "Gemini",
+];
 
 const principles = [
   "Lead with the problem solved—then the stack. Hiring managers scan outcomes first.",
@@ -697,7 +708,7 @@ function MobileMenu({ open, onClose }) {
   );
 }
 
-const heroChips = ["Agentic AI", "Gemini API", "React", "Azure", "MERN", "Java"];
+const heroChips = ["Agentic AI", "LLMs", "RAG", "MERN", "Next.js", "SEO"];
 
 function Hero() {
   return (
@@ -738,7 +749,7 @@ function Hero() {
               <span className="hero-line hero-line--signal block">Engineer</span>
             </h1>
             <p className="hero-tagline mt-6 max-w-md text-sm font-bold leading-relaxed text-bone/55 md:text-base lg:hidden">
-              AI integration at SageAlpha · Mock Interview SaaS on Render · Java backend experience.
+              AED SmartX &amp; AED Inspect at Think Health · Call IQ at SageAlpha · Mock Interview SaaS on Render.
             </p>
             <div className="hero-chips mt-7 flex max-w-2xl flex-wrap gap-2">
               {heroChips.map((chip) => (
@@ -865,15 +876,15 @@ function Hero() {
               {[0, 1].map((pass) =>
                 [
                   "AED SmartX",
-                  "Call IQ",
-                  "Gemini",
                   "Agentic AI",
+                  "LLMs",
+                  "RAG",
                   "MERN",
-                  "Azure",
-                  "React",
-                  "Java",
+                  "Next.js",
+                  "SEO",
+                  "Call IQ",
                   "Think Health",
-                  "GSSoC",
+                  "Gemini",
                 ].map((word, index) => (
                   <span
                     key={`${pass}-${word}`}
@@ -980,7 +991,7 @@ function Manifesto() {
               >
                 Call IQ
               </a>
-              , shipped a Gemini-powered interview SaaS on Render, and have enterprise Java internship experience.
+              , and shipped a Gemini-powered interview SaaS on Render.
             </p>
             <p className="about-sub mt-6 max-w-2xl border-t border-ink/10 pt-5 text-[11px] font-black uppercase leading-relaxed tracking-wide text-ink/45 md:text-xs lg:max-w-none">
               AI Full Stack Engineer · Agentic AI · Health Tech · Full-Stack SaaS
@@ -1111,6 +1122,20 @@ function SkillLogo({ type }) {
         <path d="M13 21l5-5 5 5" />
       </>
     ),
+    llm: (
+      <>
+        <rect x="9" y="9" width="18" height="18" rx="3" />
+        <path d="M14 14h8v8h-8z" />
+        <path d="M14 4v5M22 4v5M14 27v5M22 27v5M4 14h5M4 22h5M27 14h5M27 22h5" />
+      </>
+    ),
+    seo: (
+      <>
+        <circle cx="15" cy="15" r="9" />
+        <path d="M21.5 21.5L31 31" />
+        <path d="M10.5 18l3-3 2.5 2 4-5" />
+      </>
+    ),
   };
 
   return (
@@ -1137,7 +1162,8 @@ function Skills() {
               A practical stack for shipping AI products.
             </h2>
             <p className="skills-lead mt-7 max-w-3xl text-lg font-bold leading-relaxed text-bone/62 md:text-xl">
-              Frontend polish, MERN delivery, agentic AI workflows, RAG foundations, PHP Laravel, Java backends, and cloud deployment.
+              Agentic AI workflows, cloud and local LLMs, RAG pipelines, MERN delivery, and Next.js apps built for
+              technical SEO.
             </p>
           </div>
         </div>
@@ -1207,11 +1233,11 @@ function Experience() {
         <div className="lg:pt-2">
           <p className="experience-label text-sm font-black uppercase text-bone/55">Experience</p>
           <p className="experience-kicker mt-5 text-xs font-black uppercase tracking-[0.18em] text-signal">
-            Health Tech · AI · React · Java · Open Source
+            Health Tech · Agentic AI · MERN · Open Source
           </p>
         </div>
         <h2 className="experience-title max-w-[22ch] text-[clamp(32px,4.6vw,72px)] font-black uppercase leading-[0.9]">
-          AI Integration, React Delivery, Java Systems, and Open Source.
+          Health-Tech AI, Agentic Workflows, Full-Stack Delivery, and Open Source.
         </h2>
       </div>
       <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,34vw)]">
@@ -1375,8 +1401,8 @@ function Stack() {
             Bridging complex AI workflows and robust, user-centric applications.
           </h2>
           <p className="stack-lead mt-7 max-w-3xl text-lg font-bold leading-relaxed text-bone/62 md:text-xl">
-            Agentic workflows on Call IQ, full-stack SaaS with Gemini Pro, GenAI media pipelines,
-            Azure deployment, and Java backend fundamentals.
+            Agentic workflows, RAG on cloud and local LLMs, full-stack MERN SaaS with Gemini, and Next.js apps
+            engineered for search.
           </p>
         </div>
       </div>

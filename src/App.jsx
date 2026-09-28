@@ -30,6 +30,7 @@ const PROFILE = {
   aedSmartxLive: "https://aedsmartx.com",
   aedInspectLive: "https://inspector.aedsmartx.com",
   thinkHealth: "https://www.thinkhealth.in",
+  sageAlpha: "https://sagealpha.ai",
   location: "Pune, India",
   graduation: "May 2026",
   heroImage: "/sagar-hero.png",
@@ -72,6 +73,7 @@ const navLinks = [
 const experience = [
   {
     company: "Think Health Care & Safety",
+    site: PROFILE.thinkHealth,
     role: "AI Full Stack Engineer",
     period: "Pune · Present",
     highlight: "AED SmartX + AED Inspect — live",
@@ -87,8 +89,9 @@ const experience = [
   },
   {
     company: "SageAlpha Analytics",
+    site: PROFILE.sageAlpha,
     role: "Frontend Developer & AI Integration Intern",
-    period: "Pune · Present",
+    period: "Pune · Prior role",
     highlight: "Call IQ — Live on Azure",
     body: "Designed and implemented React UI flows for Call IQ, an AI-powered call intelligence platform. Integrated agentic AI workflows for multi-step automation, real-time transcription insights, and automated follow-up support. Deployed frontend builds on Microsoft Azure Static Web Apps.",
     image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1400&q=90",
@@ -255,11 +258,22 @@ const education = [
 ];
 
 const metrics = [
-  { value: "8.80", label: "BE CGPA", sub: "Computer Engineering", count: true, decimals: 2 },
-  { value: "4", label: "Internships", sub: "AI · React · Java · OSS", count: true, decimals: 0 },
-  { value: "Live", label: "Production", sub: "AED SmartX · Call IQ · SaaS" },
-  { value: "GSSoC", label: "Open Source", sub: "Contributor '25" },
-  { value: "2026", label: "Graduated", sub: "Pune · Remote OK" },
+  { value: "Now", label: "AI Full Stack Engineer", sub: "Think Health Care & Safety", live: true },
+  {
+    value: "4",
+    label: "Live products",
+    sub: "AED SmartX · AED Inspect · Call IQ · Mock Interview",
+    count: true,
+    decimals: 0,
+  },
+  {
+    value: "5",
+    label: "Teams shipped with",
+    sub: "Think Health · SageAlpha · Scalefull · Pegasus · GSSoC",
+    count: true,
+    decimals: 0,
+  },
+  { value: "8.80", label: "B.E. CGPA", sub: "Computer Engineering · 2026", count: true, decimals: 2 },
 ];
 
 const stackPillars = [
@@ -706,10 +720,10 @@ function Hero() {
               <span className="status-ping absolute inline-flex h-full w-full rounded-full bg-signal" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
             </span>
-            Available for work
+            Building at Think Health
           </span>
           <span className="hero-meta text-[11px] font-black uppercase text-bone/55 md:text-xs">
-            {PROFILE.location} · Remote-friendly
+            {PROFILE.location}
           </span>
         </div>
 
@@ -825,9 +839,9 @@ function Hero() {
             </div>
             <div className="hero-proof mt-10 grid grid-cols-3 gap-4 border-t border-white/15 pt-6">
               {[
-                ["8.80", "CGPA", "BE CSE", 2],
-                ["Live", "Products", "AED SmartX · Call IQ"],
-                ["2026", "Grad", "Pune · Remote"],
+                ["Now", "Think Health", "AI Full Stack"],
+                ["4", "Live products", "AED · Call IQ · SaaS", 0],
+                ["8.80", "CGPA", "B.E. Computer Engg", 2],
               ].map(([value, label, sub, decimals]) => (
                 <div key={label} className="hero-proof-item">
                   <p
@@ -911,8 +925,12 @@ function Manifesto() {
                 <img className="about-portrait-img h-full w-full object-cover" src={PROFILE.heroImage} alt="Sagar Kadam" />
               </motion.div>
               <div className="mt-4 flex flex-wrap justify-center gap-2">
-                <span className="about-badge rounded-full bg-ink px-3 py-1.5 text-[10px] font-black uppercase text-bone">AI Engineer</span>
-                <span className="about-badge rounded-full bg-signal px-3 py-1.5 text-[10px] font-black uppercase text-ink">CGPA 8.80</span>
+                <span className="about-badge rounded-full bg-ink px-3 py-1.5 text-[10px] font-black uppercase text-bone">
+                  AI Full Stack Engineer
+                </span>
+                <span className="about-badge rounded-full bg-signal px-3 py-1.5 text-[10px] font-black uppercase text-ink">
+                  @ Think Health
+                </span>
               </div>
             </figure>
 
@@ -944,7 +962,16 @@ function Manifesto() {
               >
                 AED Inspect
               </a>
-              . Graduated {PROFILE.graduation}. I&apos;ve also built agentic AI at SageAlpha on{" "}
+              . Before that I built agentic AI at{" "}
+              <a
+                className="text-ink underline decoration-signal decoration-2 underline-offset-4 transition-colors hover:decoration-ink"
+                href={PROFILE.sageAlpha}
+                target="_blank"
+                rel="noreferrer"
+              >
+                SageAlpha
+              </a>{" "}
+              on{" "}
               <a
                 className="text-ink underline decoration-signal decoration-2 underline-offset-4 transition-colors hover:decoration-ink"
                 href={PROFILE.callIqLive}
@@ -956,7 +983,7 @@ function Manifesto() {
               , shipped a Gemini-powered interview SaaS on Render, and have enterprise Java internship experience.
             </p>
             <p className="about-sub mt-6 max-w-2xl border-t border-ink/10 pt-5 text-[11px] font-black uppercase leading-relaxed tracking-wide text-ink/45 md:text-xs lg:max-w-none">
-              Targeting AI Engineer · Frontend + AI Integration · Full Stack
+              AI Full Stack Engineer · Agentic AI · Health Tech · Full-Stack SaaS
             </p>
           </div>
 
@@ -973,8 +1000,12 @@ function Manifesto() {
               />
             </motion.div>
             <div className="mt-5 flex flex-col gap-2">
-              <span className="about-badge w-fit rounded-full bg-ink px-4 py-2 text-[10px] font-black uppercase text-bone">AI Engineer</span>
-              <span className="about-badge w-fit rounded-full bg-signal px-4 py-2 text-[10px] font-black uppercase text-ink">{PROFILE.location}</span>
+              <span className="about-badge w-fit rounded-full bg-ink px-4 py-2 text-[10px] font-black uppercase text-bone">
+                AI Full Stack Engineer
+              </span>
+              <span className="about-badge w-fit rounded-full bg-signal px-4 py-2 text-[10px] font-black uppercase text-ink">
+                @ Think Health · {PROFILE.location}
+              </span>
             </div>
           </figure>
         </div>
@@ -992,12 +1023,12 @@ function Manifesto() {
             <p className="text-xs font-black uppercase text-muted">{item.period}</p>
             <h3 className="about-edu-title mt-3 text-xl font-black leading-tight md:text-2xl">{item.degree}</h3>
             <p className="mt-2 text-sm font-bold text-muted">{item.school}</p>
-            <p className="mt-4 text-sm font-black uppercase text-signal">{item.detail}</p>
+            <p className="mt-4 text-sm font-black uppercase text-[#6f7d10]">{item.detail}</p>
           </motion.article>
         ))}
       </div>
 
-      <div className="about-metrics mx-auto mt-4 grid max-w-[1500px] gap-px overflow-hidden border border-ink/12 bg-ink/12 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="about-metrics mx-auto mt-4 grid max-w-[1500px] gap-px overflow-hidden border border-ink/12 bg-ink/12 sm:grid-cols-2 lg:grid-cols-4">
         {metrics.map((metric) => (
           <motion.div
             key={metric.label}
@@ -1005,12 +1036,16 @@ function Manifesto() {
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           >
-            <p
-              className="text-[clamp(36px,4.5vw,64px)] font-black leading-none tabular-nums transition-colors duration-300 group-hover:text-signal"
-              data-count={metric.count ? metric.value : undefined}
-              data-decimals={metric.decimals}
-            >
-              {metric.value}
+            <p className="flex items-center gap-3 text-[clamp(36px,4.5vw,64px)] font-black leading-none tabular-nums">
+              {metric.live && (
+                <span className="relative flex h-3 w-3 shrink-0" aria-hidden="true">
+                  <span className="status-ping absolute inline-flex h-full w-full rounded-full bg-signal" />
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-signal ring-2 ring-ink/10" />
+                </span>
+              )}
+              <span data-count={metric.count ? metric.value : undefined} data-decimals={metric.decimals}>
+                {metric.value}
+              </span>
             </p>
             <p className="mt-3 text-sm font-black uppercase leading-tight">{metric.label}</p>
             <p className="mt-1 text-xs font-bold uppercase text-muted">{metric.sub}</p>
@@ -1172,7 +1207,7 @@ function Experience() {
         <div className="lg:pt-2">
           <p className="experience-label text-sm font-black uppercase text-bone/55">Experience</p>
           <p className="experience-kicker mt-5 text-xs font-black uppercase tracking-[0.18em] text-signal">
-            AI Integration · React · Java · Open Source
+            Health Tech · AI · React · Java · Open Source
           </p>
         </div>
         <h2 className="experience-title max-w-[22ch] text-[clamp(32px,4.6vw,72px)] font-black uppercase leading-[0.9]">
@@ -1232,7 +1267,21 @@ function Experience() {
 
                   <div className="min-w-0">
                     <div className="experience-part flex flex-wrap items-baseline justify-between gap-3">
-                      <h3 className="text-[clamp(24px,3vw,42px)] font-black leading-[0.95]">{role.company}</h3>
+                      <h3 className="text-[clamp(24px,3vw,42px)] font-black leading-[0.95]">
+                        {role.site ? (
+                          <a
+                            className="relative z-10 inline-flex items-start gap-1.5 transition-colors duration-300 hover:text-signal"
+                            href={role.site}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {role.company}
+                            <ArrowUpRight className="mt-[0.1em] h-[0.5em] w-[0.5em] opacity-50" strokeWidth={3} />
+                          </a>
+                        ) : (
+                          role.company
+                        )}
+                      </h3>
                       <span className="flex items-center gap-2 text-xs font-black uppercase text-bone/50">
                         {role.current && (
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-signal/50 px-2 py-0.5 text-[10px] text-signal">
@@ -1621,7 +1670,7 @@ function Closing() {
               <span className="status-ping absolute inline-flex h-full w-full rounded-full bg-ink" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-ink" />
             </span>
-            Available for work
+            Open to conversations
           </p>
           <h2 className="closing-title max-w-5xl text-[clamp(48px,7.4vw,124px)] font-black uppercase leading-[0.84]">
             Let&apos;s build something impactful.
@@ -1630,11 +1679,11 @@ function Closing() {
 
         <div className="closing-side grid content-end gap-8">
           <p className="closing-part text-[clamp(22px,2.4vw,36px)] font-black leading-tight">
-            Open to Full-Stack and AI Engineering roles.
+            Building health-tech AI at Think Health.
           </p>
           <p className="closing-part max-w-xl text-base font-bold leading-relaxed text-muted md:text-lg">
-            B.E. Computer Engineering (8.80 CGPA) · Pune, India · Graduated May 2026. Available for remote and
-            on-site opportunities.
+            AI Full Stack Engineer in Pune, India. Always happy to talk about AI products, full-stack builds, and
+            interesting collaborations.
           </p>
 
           <div className="closing-part">
@@ -1712,8 +1761,8 @@ function Footer() {
             Sagar Kadam
           </a>
           <p className="mt-5 max-w-lg text-sm font-bold leading-relaxed text-bone/55">
-            AI Full Stack Engineer · B.E. Computer Engineering (8.80 CGPA) · Graduated May 2026. Available for remote
-            and on-site opportunities.
+            AI Full Stack Engineer at Think Health Care &amp; Safety · Previously SageAlpha · B.E. Computer
+            Engineering (8.80 CGPA), 2026.
           </p>
         </div>
 

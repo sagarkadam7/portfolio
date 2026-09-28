@@ -617,7 +617,7 @@ main:focus {
 }
 
 .skills-ribbon {
-  animation: skills-ribbon 28s linear infinite;
+  animation: skills-ribbon 72s linear infinite;
   will-change: transform;
 }
 

@@ -6,6 +6,7 @@ import {
   Copy,
   ExternalLink,
   GitBranch,
+  HeartPulse,
   Linkedin,
   Mail,
   Menu,
@@ -26,6 +27,9 @@ const PROFILE = {
   github: "https://github.com/sagarkadam7",
   mockInterviewLive: "https://interviewai-web-h2ht.onrender.com",
   callIqLive: "https://witty-grass-0d70a0a10.6.azurestaticapps.net/",
+  aedSmartxLive: "https://aedsmartx.com",
+  aedInspectLive: "https://inspector.aedsmartx.com",
+  thinkHealth: "https://www.thinkhealth.in",
   location: "Pune, India",
   graduation: "May 2026",
   heroImage: "/sagar-hero.png",
@@ -67,6 +71,21 @@ const navLinks = [
 
 const experience = [
   {
+    company: "Think Health Care & Safety",
+    role: "AI Full Stack Engineer",
+    period: "Pune · Present",
+    highlight: "AED SmartX + AED Inspect — live",
+    body: "Building Think Health's AED products end to end: AED SmartX, a platform for tracking devices, inspections, supplies, training certifications, and compliance across sites — and AED Inspect, where AI reads photos of a defibrillator's labels and reports in minutes whether it's emergency-ready.",
+    image: "/projects/aedsmartx.jpg",
+    icon: HeartPulse,
+    stack: ["Full Stack", "AI Vision", "Compliance", "Health Tech"],
+    links: [
+      { label: "AED SmartX", href: PROFILE.aedSmartxLive },
+      { label: "AED Inspect", href: PROFILE.aedInspectLive },
+    ],
+    current: true,
+  },
+  {
     company: "SageAlpha Analytics",
     role: "Frontend Developer & AI Integration Intern",
     period: "Pune · Present",
@@ -75,7 +94,7 @@ const experience = [
     image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1400&q=90",
     icon: Zap,
     stack: ["React", "Tailwind", "Agentic AI", "Azure"],
-    live: { label: "Visit Call IQ", href: PROFILE.callIqLive },
+    links: [{ label: "Visit Call IQ", href: PROFILE.callIqLive }],
   },
   {
     company: "Scalefull Technologies",
@@ -143,7 +162,27 @@ const services = [
 
 const projects = [
   {
-    index: "01",
+    title: "AED SmartX",
+    type: "Live · Think Health",
+    stack: "Full Stack · Health Tech · SaaS",
+    impact:
+      "AED program management platform: track devices across sites, log inspections, get supply and expiry alerts, and manage training certifications and compliance from one portal.",
+    image: "/projects/aedsmartx.jpg",
+    imagePosition: "82% 40%",
+    screen: true,
+    live: PROFILE.aedSmartxLive,
+  },
+  {
+    title: "AED Inspect",
+    type: "Live · AI Inspection",
+    stack: "AI Vision · PDF Reports",
+    impact:
+      "Photograph six parts of a defibrillator and the AI reads every label, tells you in about three minutes whether it would work in an emergency, and emails a PDF report.",
+    image: "/projects/aed-inspect.jpg",
+    screen: true,
+    live: PROFILE.aedInspectLive,
+  },
+  {
     title: "CallIQ: AI Call Intelligence",
     type: "Live · SageAlpha",
     stack: "React · Agentic AI · Azure",
@@ -153,7 +192,6 @@ const projects = [
     live: PROFILE.callIqLive,
   },
   {
-    index: "02",
     title: "AI Mock Interview Platform",
     type: "Live · Full-stack SaaS",
     stack: "MERN · Gemini · JWT · jsPDF",
@@ -164,7 +202,6 @@ const projects = [
     live: PROFILE.mockInterviewLive,
   },
   {
-    index: "03",
     title: "Automated Media Pipeline",
     type: "GenAI · Orchestration",
     stack: "TTS · Avatars · YouTube API",
@@ -174,7 +211,6 @@ const projects = [
     repo: PROFILE.github,
   },
   {
-    index: "04",
     title: "React Commerce",
     type: "Live · E-commerce",
     stack: "React · Vercel",
@@ -184,7 +220,6 @@ const projects = [
     live: "https://react-commerce-rose.vercel.app",
   },
   {
-    index: "05",
     title: "Projects List",
     type: "Live · Dev portfolio hub",
     stack: "React · Vercel",
@@ -194,7 +229,6 @@ const projects = [
     live: "https://projectslist-nine.vercel.app",
   },
   {
-    index: "06",
     title: "Learning Platform",
     type: "Live · EdTech UI",
     stack: "React · Vercel",
@@ -223,7 +257,7 @@ const education = [
 const metrics = [
   { value: "8.80", label: "BE CGPA", sub: "Computer Engineering", count: true, decimals: 2 },
   { value: "4", label: "Internships", sub: "AI · React · Java · OSS", count: true, decimals: 0 },
-  { value: "Live", label: "Production", sub: "Call IQ + Mock Interview" },
+  { value: "Live", label: "Production", sub: "AED SmartX · Call IQ · SaaS" },
   { value: "GSSoC", label: "Open Source", sub: "Contributor '25" },
   { value: "2026", label: "Graduated", sub: "Pune · Remote OK" },
 ];
@@ -706,17 +740,34 @@ function Hero() {
           <motion.div className="hero-panel relative max-w-xl overflow-hidden border-l border-white/18 bg-black/10 py-7 pl-6 pr-2 lg:justify-self-end lg:pl-8 xl:max-w-[520px]">
             <div className="pointer-events-none absolute -left-px top-0 h-full w-px bg-gradient-to-b from-transparent via-signal/45 to-transparent" />
             <p className="hero-panel-lead relative text-lg font-bold leading-relaxed text-bone/78 md:text-xl md:leading-relaxed">
-              I build <span className="font-black text-bone">agentic AI</span> and full-stack products with practical implementation examples:
-              {" "}
+              I build <span className="font-black text-bone">agentic AI</span> and full-stack products:{" "}
               <a
                 className="text-signal underline decoration-signal/40 decoration-2 underline-offset-4 transition-colors hover:decoration-signal"
+                href={PROFILE.aedSmartxLive}
+                target="_blank"
+                rel="noreferrer"
+              >
+                AED SmartX
+              </a>{" "}
+              and{" "}
+              <a
+                className="text-signal underline decoration-signal/40 decoration-2 underline-offset-4 transition-colors hover:decoration-signal"
+                href={PROFILE.aedInspectLive}
+                target="_blank"
+                rel="noreferrer"
+              >
+                AED Inspect
+              </a>{" "}
+              at Think Health,{" "}
+              <a
+                className="underline decoration-bone/30 decoration-2 underline-offset-4 transition-colors hover:decoration-bone"
                 href={PROFILE.callIqLive}
                 target="_blank"
                 rel="noreferrer"
               >
                 Call IQ
               </a>{" "}
-              on Azure,{" "}
+              on Azure, and{" "}
               <a
                 className="underline decoration-bone/30 decoration-2 underline-offset-4 transition-colors hover:decoration-bone"
                 href={PROFILE.mockInterviewLive}
@@ -725,10 +776,19 @@ function Hero() {
               >
                 Mock Interview AI
               </a>{" "}
-              on Render, and MERN + Java backend work.
+              on Render.
             </p>
-            <p className="hero-panel-sub mt-5 text-xs font-black uppercase leading-relaxed tracking-[0.12em] text-bone/45">
-              AI Engineer · Frontend + AI Integration · Full Stack
+            <p className="hero-panel-sub mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-black uppercase leading-relaxed tracking-[0.12em] text-bone/55">
+              <span className="rounded-full bg-signal px-2 py-0.5 text-[10px] tracking-[0.1em] text-ink">Now</span>
+              AI Full Stack Engineer ·{" "}
+              <a
+                className="text-bone underline decoration-bone/30 underline-offset-4 transition-colors hover:decoration-bone"
+                href={PROFILE.thinkHealth}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Think Health Care &amp; Safety
+              </a>
             </p>
             <div className="hero-cta mt-8 flex flex-wrap gap-3">
               <span className="hero-cta-item">
@@ -766,7 +826,7 @@ function Hero() {
             <div className="hero-proof mt-10 grid grid-cols-3 gap-4 border-t border-white/15 pt-6">
               {[
                 ["8.80", "CGPA", "BE CSE", 2],
-                ["Live", "Products", "Call IQ · SaaS"],
+                ["Live", "Products", "AED SmartX · Call IQ"],
                 ["2026", "Grad", "Pune · Remote"],
               ].map(([value, label, sub, decimals]) => (
                 <div key={label} className="hero-proof-item">
@@ -789,7 +849,18 @@ function Hero() {
           <div className="hero-marquee overflow-hidden border-y border-white/12 py-4 md:py-5">
             <div className="marquee-track flex w-max shrink-0 items-center text-[clamp(30px,5.2vw,78px)] font-black uppercase leading-none tracking-[-0.03em]">
               {[0, 1].map((pass) =>
-                ["Call IQ", "Gemini", "Agentic AI", "MERN", "Azure", "React", "Java", "GSSoC"].map((word, index) => (
+                [
+                  "AED SmartX",
+                  "Call IQ",
+                  "Gemini",
+                  "Agentic AI",
+                  "MERN",
+                  "Azure",
+                  "React",
+                  "Java",
+                  "Think Health",
+                  "GSSoC",
+                ].map((word, index) => (
                   <span
                     key={`${pass}-${word}`}
                     className={`pr-[0.6em] ${index % 2 === 0 ? "text-bone" : "marquee-word--outline"}`}
@@ -846,7 +917,34 @@ function Manifesto() {
             </figure>
 
             <p className="about-lead mt-8 max-w-2xl text-[15px] font-bold leading-relaxed text-muted sm:text-base md:mt-10 md:text-lg md:leading-relaxed lg:max-w-none">
-              I&apos;m Sagar Kadam — based in {PROFILE.location}, graduated {PROFILE.graduation}. I build agentic AI at SageAlpha on{" "}
+              I&apos;m Sagar Kadam, an AI Full Stack Engineer at{" "}
+              <a
+                className="text-ink underline decoration-signal decoration-2 underline-offset-4 transition-colors hover:decoration-ink"
+                href={PROFILE.thinkHealth}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Think Health Care &amp; Safety
+              </a>{" "}
+              in {PROFILE.location}, where I build{" "}
+              <a
+                className="text-ink underline decoration-signal decoration-2 underline-offset-4 transition-colors hover:decoration-ink"
+                href={PROFILE.aedSmartxLive}
+                target="_blank"
+                rel="noreferrer"
+              >
+                AED SmartX
+              </a>{" "}
+              and the AI-powered{" "}
+              <a
+                className="text-ink underline decoration-signal decoration-2 underline-offset-4 transition-colors hover:decoration-ink"
+                href={PROFILE.aedInspectLive}
+                target="_blank"
+                rel="noreferrer"
+              >
+                AED Inspect
+              </a>
+              . Graduated {PROFILE.graduation}. I&apos;ve also built agentic AI at SageAlpha on{" "}
               <a
                 className="text-ink underline decoration-signal decoration-2 underline-offset-4 transition-colors hover:decoration-ink"
                 href={PROFILE.callIqLive}
@@ -855,7 +953,7 @@ function Manifesto() {
               >
                 Call IQ
               </a>
-              , ship a Gemini-powered interview SaaS on Render, and have enterprise Java internship experience.
+              , shipped a Gemini-powered interview SaaS on Render, and have enterprise Java internship experience.
             </p>
             <p className="about-sub mt-6 max-w-2xl border-t border-ink/10 pt-5 text-[11px] font-black uppercase leading-relaxed tracking-wide text-ink/45 md:text-xs lg:max-w-none">
               Targeting AI Engineer · Frontend + AI Integration · Full Stack
@@ -1135,7 +1233,18 @@ function Experience() {
                   <div className="min-w-0">
                     <div className="experience-part flex flex-wrap items-baseline justify-between gap-3">
                       <h3 className="text-[clamp(24px,3vw,42px)] font-black leading-[0.95]">{role.company}</h3>
-                      <span className="text-xs font-black uppercase text-bone/50">{role.period}</span>
+                      <span className="flex items-center gap-2 text-xs font-black uppercase text-bone/50">
+                        {role.current && (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-signal/50 px-2 py-0.5 text-[10px] text-signal">
+                            <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                              <span className="status-ping absolute inline-flex h-full w-full rounded-full bg-signal" />
+                              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+                            </span>
+                            Current
+                          </span>
+                        )}
+                        {role.period}
+                      </span>
                     </div>
                     <p className="experience-part mt-2 text-sm font-black uppercase text-bone/75 md:text-base">{role.role}</p>
                     <p className="experience-part mt-2 text-xs font-black uppercase text-signal">{role.highlight}</p>
@@ -1153,16 +1262,17 @@ function Experience() {
                           {tool}
                         </span>
                       ))}
-                      {role.live && (
+                      {role.links?.map((link) => (
                         <a
+                          key={link.href}
                           className="relative z-10 inline-flex items-center gap-1.5 rounded-full border border-signal bg-signal px-3 py-1 text-[10px] font-black uppercase text-ink transition-colors duration-300 hover:border-bone hover:bg-bone md:text-xs"
-                          href={role.live.href}
+                          href={link.href}
                           target="_blank"
                           rel="noreferrer"
                         >
-                          {role.live.label} <ArrowUpRight size={13} strokeWidth={3} />
+                          {link.label} <ArrowUpRight size={13} strokeWidth={3} />
                         </a>
-                      )}
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -1389,7 +1499,7 @@ function Work() {
           </h2>
         </div>
         <div className="work-track flex gap-5 pb-2 will-change-transform">
-          {projects.map((project) => {
+          {projects.map((project, position) => {
             const primaryHref = project.live || project.href || project.repo;
             const isExternal = primaryHref.startsWith("http");
             return (
@@ -1398,7 +1508,10 @@ function Work() {
                 className="project-card group relative isolate grid h-[clamp(420px,52vh,620px)] w-[84vw] shrink-0 content-end overflow-hidden rounded-[2px] p-5 sm:w-[72vw] md:w-[42vw] md:p-7 xl:w-[36vw]"
               >
                 <img
-                  className="project-img absolute inset-0 -z-20 h-full w-full object-cover object-center"
+                  className={`project-img absolute inset-0 -z-20 h-full w-full object-cover object-center ${
+                    project.screen ? "project-img--screen" : ""
+                  }`}
+                  style={project.imagePosition ? { objectPosition: project.imagePosition } : undefined}
                   src={project.image}
                   alt=""
                   loading="lazy"
@@ -1414,7 +1527,7 @@ function Work() {
                   data-cursor-label="View"
                 />
                 <div className="mb-5 flex items-center justify-between border-b border-white/30 pb-4 text-xs font-black uppercase md:text-sm">
-                  <span className="text-signal">{project.index}</span>
+                  <span className="text-signal">{String(position + 1).padStart(2, "0")}</span>
                   <span>{project.type}</span>
                 </div>
                 <h3 className="text-[clamp(28px,3vw,48px)] font-black leading-[0.92]">{project.title}</h3>
@@ -1609,6 +1722,7 @@ function Footer() {
             {[
               ["LinkedIn", PROFILE.linkedin],
               ["GitHub", PROFILE.github],
+              ["AED SmartX", PROFILE.aedSmartxLive],
               ["Call IQ", PROFILE.callIqLive],
               ["Mock Interview", PROFILE.mockInterviewLive],
             ].map(([label, href]) => (

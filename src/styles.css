@@ -234,6 +234,15 @@ main:focus {
   scale: 1.05;
 }
 
+/* Real product screenshots are light UIs, so they need a deeper dim for text contrast. */
+.project-img--screen {
+  filter: brightness(0.36) saturate(1.1);
+}
+
+.project-card:hover .project-img--screen {
+  filter: brightness(0.5) saturate(1.15);
+}
+
 .project-btn {
   display: inline-flex;
   align-items: center;

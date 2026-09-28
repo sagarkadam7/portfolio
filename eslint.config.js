@@ -13,7 +13,13 @@ export default [
       globals: {
         document: "readonly",
         window: "readonly",
+        navigator: "readonly",
+        sessionStorage: "readonly",
         IntersectionObserver: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
       },
       parserOptions: {
         ecmaVersion: "latest",

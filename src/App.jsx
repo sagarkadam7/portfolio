@@ -22,10 +22,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const PROFILE = {
   email: "sagarkadam8081@gmail.com",
-  phone: "+91 8010477969",
   linkedin: "https://www.linkedin.com/in/sagar-kadam-engineer7",
   github: "https://github.com/sagarkadam7",
   mockInterviewLive: "https://interviewai-web-h2ht.onrender.com",
+  callIqLive: "https://witty-grass-0d70a0a10.6.azurestaticapps.net/",
   location: "Pune, India",
   graduation: "May 2026",
   heroImage: "/sagar-hero.png",
@@ -75,6 +75,7 @@ const experience = [
     image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1400&q=90",
     icon: Zap,
     stack: ["React", "Tailwind", "Agentic AI", "Azure"],
+    live: { label: "Visit Call IQ", href: PROFILE.callIqLive },
   },
   {
     company: "Scalefull Technologies",
@@ -114,7 +115,8 @@ const services = [
     kicker: "Agentic AI in Production",
     title: "Multi-step AI workflows for applied product use cases.",
     body: "Clear UX, reliable data flow, and maintainable frontend integration — shipped on Call IQ and running on Azure.",
-    proof: "Call IQ · SageAlpha",
+    proof: "Call IQ · Live on Azure",
+    proofHref: PROFILE.callIqLive,
     tools: ["Agent workflows", "Transcription insights", "Follow-up automation", "Azure"],
     image: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1200&q=90",
   },
@@ -124,6 +126,7 @@ const services = [
     title: "Secure, responsive web platforms from the ground up.",
     body: "Owning the entire stack — from database schema to final UI/UX — with authentication, APIs, and deployment handled end to end.",
     proof: "Mock Interview AI · Live on Render",
+    proofHref: PROFILE.mockInterviewLive,
     tools: ["MERN", "JWT auth", "REST APIs", "Render"],
     image: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1200&q=90",
   },
@@ -142,12 +145,12 @@ const projects = [
   {
     index: "01",
     title: "CallIQ: AI Call Intelligence",
-    type: "Internship · SageAlpha",
+    type: "Live · SageAlpha",
     stack: "React · Agentic AI · Azure",
     impact:
       "Developed React UI flows and agentic workflow integrations for a call intelligence platform. Supports transcription analysis, follow-up automation, and Azure-hosted frontend deployment.",
     image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1500&q=90",
-    href: "#experience",
+    live: PROFILE.callIqLive,
   },
   {
     index: "02",
@@ -704,7 +707,25 @@ function Hero() {
             <div className="pointer-events-none absolute -left-px top-0 h-full w-px bg-gradient-to-b from-transparent via-signal/45 to-transparent" />
             <p className="hero-panel-lead relative text-lg font-bold leading-relaxed text-bone/78 md:text-xl md:leading-relaxed">
               I build <span className="font-black text-bone">agentic AI</span> and full-stack products with practical implementation examples:
-              <span className="text-signal"> Call IQ</span> on Azure, Mock Interview AI on Render, and MERN + Java backend work.
+              {" "}
+              <a
+                className="text-signal underline decoration-signal/40 decoration-2 underline-offset-4 transition-colors hover:decoration-signal"
+                href={PROFILE.callIqLive}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Call IQ
+              </a>{" "}
+              on Azure,{" "}
+              <a
+                className="underline decoration-bone/30 decoration-2 underline-offset-4 transition-colors hover:decoration-bone"
+                href={PROFILE.mockInterviewLive}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Mock Interview AI
+              </a>{" "}
+              on Render, and MERN + Java backend work.
             </p>
             <p className="hero-panel-sub mt-5 text-xs font-black uppercase leading-relaxed tracking-[0.12em] text-bone/45">
               AI Engineer · Frontend + AI Integration · Full Stack
@@ -826,7 +847,15 @@ function Manifesto() {
 
             <p className="about-lead mt-8 max-w-2xl text-[15px] font-bold leading-relaxed text-muted sm:text-base md:mt-10 md:text-lg md:leading-relaxed lg:max-w-none">
               I&apos;m Sagar Kadam — based in {PROFILE.location}, graduated {PROFILE.graduation}. I build agentic AI at SageAlpha on{" "}
-              <span className="text-ink">Call IQ</span>, ship a Gemini-powered interview SaaS on Render, and have enterprise Java internship experience.
+              <a
+                className="text-ink underline decoration-signal decoration-2 underline-offset-4 transition-colors hover:decoration-ink"
+                href={PROFILE.callIqLive}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Call IQ
+              </a>
+              , ship a Gemini-powered interview SaaS on Render, and have enterprise Java internship experience.
             </p>
             <p className="about-sub mt-6 max-w-2xl border-t border-ink/10 pt-5 text-[11px] font-black uppercase leading-relaxed tracking-wide text-ink/45 md:text-xs lg:max-w-none">
               Targeting AI Engineer · Frontend + AI Integration · Full Stack
@@ -1124,6 +1153,16 @@ function Experience() {
                           {tool}
                         </span>
                       ))}
+                      {role.live && (
+                        <a
+                          className="relative z-10 inline-flex items-center gap-1.5 rounded-full border border-signal bg-signal px-3 py-1 text-[10px] font-black uppercase text-ink transition-colors duration-300 hover:border-bone hover:bg-bone md:text-xs"
+                          href={role.live.href}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {role.live.label} <ArrowUpRight size={13} strokeWidth={3} />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1290,7 +1329,18 @@ function Services() {
                   </div>
                   <p className="mt-6 flex items-center gap-2.5 border-t border-ink/12 pt-5 text-[11px] font-black uppercase tracking-[0.12em] text-ink/55">
                     <span className="h-1.5 w-1.5 rounded-full bg-signal" aria-hidden="true" />
-                    {service.proof}
+                    {service.proofHref ? (
+                      <a
+                        className="inline-flex items-center gap-1 text-ink underline decoration-ink/25 decoration-2 underline-offset-4 transition-colors hover:decoration-ink"
+                        href={service.proofHref}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {service.proof} <ArrowUpRight size={13} strokeWidth={3} />
+                      </a>
+                    ) : (
+                      service.proof
+                    )}
                   </p>
                 </div>
               </div>
@@ -1559,6 +1609,7 @@ function Footer() {
             {[
               ["LinkedIn", PROFILE.linkedin],
               ["GitHub", PROFILE.github],
+              ["Call IQ", PROFILE.callIqLive],
               ["Mock Interview", PROFILE.mockInterviewLive],
             ].map(([label, href]) => (
               <a
@@ -1579,9 +1630,6 @@ function Footer() {
             </span>
             <a className="transition-colors hover:text-bone" href={`mailto:${PROFILE.email}`}>
               {PROFILE.email}
-            </a>
-            <a className="transition-colors hover:text-bone" href={`tel:${PROFILE.phone.replace(/\s/g, "")}`}>
-              {PROFILE.phone}
             </a>
           </div>
         </div>

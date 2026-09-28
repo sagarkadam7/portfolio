@@ -10,6 +10,7 @@ import {
   Linkedin,
   Mail,
   Menu,
+  Sparkles,
   X,
   Zap,
 } from "lucide-react";
@@ -20,6 +21,8 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import AskAgent from "./AskAgent.jsx";
+import { openAskAgent } from "./askEvents.js";
 
 const PROFILE = {
   email: "sagarkadam8081@gmail.com",
@@ -842,15 +845,14 @@ function Hero() {
                 </a>
               </span>
               <span className="hero-cta-item">
-                <a
+                <button
+                  type="button"
                   data-magnetic
                   className="inline-flex items-center gap-2 rounded-full border border-signal/35 bg-white/[0.04] px-5 py-3.5 text-sm font-black uppercase text-bone transition-colors duration-300 hover:border-signal hover:text-signal"
-                  href={PROFILE.mockInterviewLive}
-                  target="_blank"
-                  rel="noreferrer"
+                  onClick={() => openAskAgent()}
                 >
-                  Live demo <ExternalLink size={15} strokeWidth={3} />
-                </a>
+                  <Sparkles size={15} strokeWidth={2.8} /> Ask my AI
+                </button>
               </span>
               <span className="hero-cta-item">
                 <a
@@ -2569,6 +2571,7 @@ export default function App() {
         <Closing />
       </main>
       <Footer />
+      <AskAgent />
     </div>
   );
 }

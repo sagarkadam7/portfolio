@@ -20,6 +20,11 @@ export default [
         clearTimeout: "readonly",
         setInterval: "readonly",
         clearInterval: "readonly",
+        fetch: "readonly",
+        AbortController: "readonly",
+        TextDecoder: "readonly",
+        CustomEvent: "readonly",
+        requestAnimationFrame: "readonly",
       },
       parserOptions: {
         ecmaVersion: "latest",
@@ -41,6 +46,17 @@ export default [
     settings: {
       react: {
         version: "detect",
+      },
+    },
+  },
+  {
+    files: ["api/**/*.js"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+        Response: "readonly",
+        ReadableStream: "readonly",
+        TextEncoder: "readonly",
       },
     },
   },

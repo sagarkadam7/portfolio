@@ -218,21 +218,6 @@ main:focus {
   -webkit-text-stroke: 1.5px rgba(243, 240, 232, 0.75);
 }
 
-.marquee-spark {
-  flex-shrink: 0;
-  width: 0.36em;
-  height: 0.36em;
-  margin-inline: 0.5em;
-  color: #c8dc54;
-  animation: spark-spin 7s linear infinite;
-}
-
-@keyframes spark-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* ---------- about ---------- */
 .about-highlight-bar {
   z-index: 0;
@@ -897,8 +882,7 @@ main:focus {
   .skills-ribbon,
   .status-ping,
   .hero-pulse,
-  .hero-scroll-icon,
-  .marquee-spark {
+  .hero-scroll-icon {
     animation: none;
   }
 

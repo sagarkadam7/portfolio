@@ -769,14 +769,12 @@ function Hero() {
             <div className="marquee-track flex w-max shrink-0 items-center text-[clamp(30px,5.2vw,78px)] font-black uppercase leading-none tracking-[-0.03em]">
               {[0, 1].map((pass) =>
                 ["Call IQ", "Gemini", "Agentic AI", "MERN", "Azure", "React", "Java", "GSSoC"].map((word, index) => (
-                  <span key={`${pass}-${word}`} className="flex items-center" aria-hidden={pass === 1 || undefined}>
-                    <span className={index % 2 === 0 ? "text-bone" : "marquee-word--outline"}>{word}</span>
-                    <svg className="marquee-spark" viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"
-                        fill="currentColor"
-                      />
-                    </svg>
+                  <span
+                    key={`${pass}-${word}`}
+                    className={`pr-[0.6em] ${index % 2 === 0 ? "text-bone" : "marquee-word--outline"}`}
+                    aria-hidden={pass === 1 || undefined}
+                  >
+                    {word}
                   </span>
                 )),
               )}

@@ -208,10 +208,29 @@ main:focus {
   transform: translateY(0);
 }
 
-.marquee-star {
-  display: inline-block;
-  font-size: 0.42em;
-  transform: translateY(-0.18em);
+/* Break the strip out of the centred content column to run edge to edge. */
+.hero-marquee {
+  margin-inline: calc(50% - 50vw);
+}
+
+.marquee-word--outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(243, 240, 232, 0.75);
+}
+
+.marquee-spark {
+  flex-shrink: 0;
+  width: 0.36em;
+  height: 0.36em;
+  margin-inline: 0.5em;
+  color: #c8dc54;
+  animation: spark-spin 7s linear infinite;
+}
+
+@keyframes spark-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ---------- about ---------- */
@@ -878,7 +897,8 @@ main:focus {
   .skills-ribbon,
   .status-ping,
   .hero-pulse,
-  .hero-scroll-icon {
+  .hero-scroll-icon,
+  .marquee-spark {
     animation: none;
   }
 

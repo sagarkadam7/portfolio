@@ -1,8 +1,170 @@
-import { ArrowUp, ArrowUpRight, Sparkles, X } from "lucide-react";
+import { ArrowUp, ArrowUpRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import gsap from "gsap";
 import { useCallback, useEffect, useRef, useState } from "react";
+import AgentGlyph from "./AgentGlyph.jsx";
 import { localAnswer, retrieve } from "./data/knowledge.js";
 import { ASK_OPEN_EVENT } from "./askEvents.js";
+
+const PORTRAIT = "/sagar-hero.png";
+const HINT_KEY = "sk-ask-hint";
+const HINT_QUESTION = "What is he building right now?";
+
+function Portrait({ size = 36 }) {
+  return (
+    <span className="relative inline-block shrink-0" style={{ width: size, height: size }}>
+      <img
+        src={PORTRAIT}
+        alt=""
+        className="h-full w-full rounded-full object-cover object-[center_22%] ring-2 ring-signal/80"
+      />
+      <span className="absolute -bottom-0.5 -right-0.5 grid h-[45%] w-[45%] place-items-center rounded-full bg-signal text-ink ring-2 ring-[#0c0c0b]">
+        <AgentGlyph size={Math.round(size * 0.34)} animated={false} />
+      </span>
+    </span>
+  );
+}
+
+function Launcher({ onOpen }) {
+  const buttonRef = useRef(null);
+  const ringRef = useRef(null);
+  const [hint, setHint] = useState(false);
+
+  useEffect(() => {
+    let seen = false;
+    try {
+      seen = Boolean(sessionStorage.getItem(HINT_KEY));
+    } catch {
+      seen = false;
+    }
+    if (seen) return undefined;
+    const show = setTimeout(() => setHint(true), 1400);
+    const hide = setTimeout(() => setHint(false), 9000);
+    try {
+      sessionStorage.setItem(HINT_KEY, "1");
+    } catch {
+      // Storage can be blocked; the hint then shows once per page load.
+    }
+    return () => {
+      clearTimeout(show);
+      clearTimeout(hide);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const button = buttonRef.current;
+    const spin = gsap.to(ringRef.current, {
+      rotation: 360,
+      duration: 18,
+      ease: "none",
+      repeat: -1,
+      transformOrigin: "50% 50%",
+    });
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const xTo = finePointer ? gsap.quickTo(button, "x", { duration: 0.7, ease: "elastic.out(1, 0.4)" }) : null;
+    const yTo = finePointer ? gsap.quickTo(button, "y", { duration: 0.7, ease: "elastic.out(1, 0.4)" }) : null;
+
+    const enter = () => gsap.to(spin, { timeScale: 4, duration: 0.6 });
+    const leave = () => {
+      gsap.to(spin, { timeScale: 1, duration: 1 });
+      xTo?.(0);
+      yTo?.(0);
+    };
+    const move = (event) => {
+      if (!xTo) return;
+      const rect = button.getBoundingClientRect();
+      xTo((event.clientX - (rect.left + rect.width / 2)) * 0.3);
+      yTo((event.clientY - (rect.top + rect.height / 2)) * 0.3);
+    };
+    button.addEventListener("pointerenter", enter);
+    button.addEventListener("pointerleave", leave);
+    button.addEventListener("pointermove", move);
+    return () => {
+      spin.kill();
+      button.removeEventListener("pointerenter", enter);
+      button.removeEventListener("pointerleave", leave);
+      button.removeEventListener("pointermove", move);
+      gsap.set(button, { x: 0, y: 0 });
+    };
+  }, []);
+
+  return (
+    <motion.div
+      className="fixed bottom-4 right-4 z-[70] md:bottom-8 md:right-8"
+      initial={{ opacity: 0, scale: 0.6, rotate: -40 }}
+      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+      exit={{ opacity: 0, scale: 0.6, rotate: 40 }}
+      transition={{ type: "spring", stiffness: 260, damping: 20 }}
+    >
+      <AnimatePresence>
+        {hint && (
+          <motion.div
+            className="absolute bottom-[calc(100%+14px)] right-0 w-[248px] md:bottom-5 md:right-[calc(100%+18px)]"
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 340, damping: 26 }}
+          >
+            <div className="relative rounded-2xl border border-white/15 bg-[#0c0c0b]/95 p-3.5 pr-8 text-bone shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+              <button
+                type="button"
+                onClick={() => {
+                  setHint(false);
+                  onOpen(HINT_QUESTION);
+                }}
+                className="flex items-start gap-3 text-left"
+              >
+                <Portrait size={34} />
+                <span className="text-[13px] font-bold leading-snug text-bone/85">
+                  Hi, I&apos;m Sagar&apos;s AI.{" "}
+                  <span className="text-signal underline decoration-signal/40 underline-offset-2">
+                    Ask me what he&apos;s building right now.
+                  </span>
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setHint(false)}
+                className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full text-bone/45 transition-colors hover:text-bone"
+                aria-label="Dismiss"
+              >
+                <X size={13} strokeWidth={2.8} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => {
+          setHint(false);
+          onOpen();
+        }}
+        className="ask-launcher relative grid h-[78px] w-[78px] place-items-center rounded-full md:h-[104px] md:w-[104px]"
+        aria-label="Ask Sagar's AI assistant (Ctrl+K)"
+        data-cursor
+      >
+        <span className="absolute inset-0 rounded-full border border-white/12 bg-[#0b0b0a] shadow-[0_18px_50px_rgba(0,0,0,0.45)]" />
+        <svg ref={ringRef} className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <path id="ask-ring-path" d="M50,50 m-39,0 a39,39 0 1,1 78,0 a39,39 0 1,1 -78,0" />
+          </defs>
+          <text className="ask-ring-text">
+            <textPath href="#ask-ring-path" textLength="243" lengthAdjust="spacing">
+              {"Ask Sagar's AI · Agentic · RAG · "}
+            </textPath>
+          </text>
+        </svg>
+        <span className="ask-launcher-core relative grid h-[38px] w-[38px] place-items-center rounded-full bg-signal text-ink shadow-[0_0_0_6px_rgba(200,220,84,0.12)] md:h-[50px] md:w-[50px]">
+          <AgentGlyph size={30} className="h-[26px] w-[26px] md:h-[32px] md:w-[32px]" />
+        </span>
+      </button>
+    </motion.div>
+  );
+}
 
 const SUGGESTIONS = [
   "What is he building right now?",
@@ -154,7 +316,17 @@ export default function AskAgent() {
   );
 
   useEffect(() => {
-    const timer = setTimeout(() => setLauncherReady(true), 2600);
+    // The hero has its own "Ask my AI" button, so the floating launcher waits until
+    // the hero is mostly scrolled away instead of stacking on top of it.
+    const hero = document.getElementById("top");
+    const observer = hero
+      ? new IntersectionObserver(([entry]) => setLauncherReady(entry.intersectionRatio < 0.35), {
+          threshold: [0, 0.35, 0.6, 1],
+        })
+      : null;
+    if (hero) observer.observe(hero);
+    else setLauncherReady(true);
+
     const onOpen = (event) => {
       setOpen(true);
       const question = event.detail?.question;
@@ -170,7 +342,7 @@ export default function AskAgent() {
     window.addEventListener(ASK_OPEN_EVENT, onOpen);
     window.addEventListener("keydown", onKey);
     return () => {
-      clearTimeout(timer);
+      observer?.disconnect();
       window.removeEventListener(ASK_OPEN_EVENT, onOpen);
       window.removeEventListener("keydown", onKey);
     };
@@ -196,28 +368,12 @@ export default function AskAgent() {
     <>
       <AnimatePresence>
         {launcherReady && !open && (
-          <motion.button
-            type="button"
-            className="ask-launcher fixed bottom-5 right-5 z-[70] flex items-center gap-2.5 rounded-full border border-signal bg-signal py-3 pl-4 pr-5 text-xs font-black uppercase tracking-[0.1em] text-ink shadow-[0_18px_50px_rgba(200,220,84,0.25)] md:bottom-8 md:right-8"
-            onClick={() => setOpen(true)}
-            initial={{ opacity: 0, y: 24, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 380, damping: 26 }}
-            whileHover={{ y: -3 }}
-            whileTap={{ scale: 0.96 }}
-            aria-label="Ask Sagar's AI assistant"
-          >
-            <span className="relative flex h-2 w-2" aria-hidden="true">
-              <span className="status-ping absolute inline-flex h-full w-full rounded-full bg-ink" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-ink" />
-            </span>
-            <Sparkles size={16} strokeWidth={2.6} />
-            Ask my AI
-            <kbd className="ml-1 hidden rounded border border-ink/25 px-1.5 py-0.5 text-[9px] font-black text-ink/60 md:inline">
-              Ctrl K
-            </kbd>
-          </motion.button>
+          <Launcher
+            onOpen={(question) => {
+              setOpen(true);
+              if (question) setTimeout(() => ask(question), 250);
+            }}
+          />
         )}
       </AnimatePresence>
 
@@ -233,17 +389,24 @@ export default function AskAgent() {
             transition={{ type: "spring", stiffness: 320, damping: 30 }}
             style={{ transformOrigin: "bottom right" }}
           >
-            <header className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
-              <div>
-                <p className="flex items-center gap-2 text-sm font-black uppercase tracking-[0.08em]">
-                  <Sparkles size={16} strokeWidth={2.6} className="text-signal" />
-                  Ask Sagar&apos;s AI
-                </p>
-                <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-bone/45">
-                  {engine === "claude"
-                    ? "Live · Claude · grounded in his portfolio"
-                    : "RAG over his portfolio · answers cite sources"}
-                </p>
+            <header className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <Portrait size={42} />
+                <div>
+                  <p className="flex items-center gap-2 text-sm font-black uppercase tracking-[0.06em]">
+                    Sagar&apos;s AI
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-signal/40 px-2 py-0.5 text-[9px] tracking-[0.12em] text-signal">
+                      <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                        <span className="status-ping absolute inline-flex h-full w-full rounded-full bg-signal" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+                      </span>
+                      Online
+                    </span>
+                  </p>
+                  <p className="mt-1 text-[10px] font-black uppercase tracking-[0.12em] text-bone/45">
+                    {engine === "claude" ? "Live · Claude · cites sources" : "Grounded in his portfolio"}
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
@@ -278,10 +441,11 @@ export default function AskAgent() {
                       }
                     >
                       {message.pending && !message.text ? (
-                        <span className="ask-typing inline-flex gap-1" aria-label="Thinking">
-                          <span />
-                          <span />
-                          <span />
+                        <span className="inline-flex items-center gap-2 text-signal" aria-label="Thinking">
+                          <AgentGlyph size={20} />
+                          <span className="text-[10px] font-black uppercase tracking-[0.14em] text-bone/50">
+                            Retrieving
+                          </span>
                         </span>
                       ) : (
                         renderRich(message.text)

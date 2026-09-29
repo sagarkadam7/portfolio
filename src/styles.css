@@ -147,36 +147,90 @@ main:focus {
   opacity: 1;
 }
 
-/* ---------- ask agent ---------- */
-.ask-typing span {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: #c8dc54;
-  animation: ask-dot 1s ease-in-out infinite;
+/* ---------- agent glyph ---------- */
+.agent-glyph-node {
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
-.ask-typing span:nth-child(2) {
-  animation-delay: 0.15s;
+.agent-glyph.is-animated .agent-glyph-pulse {
+  animation: glyph-travel 2.4s linear infinite;
 }
 
-.ask-typing span:nth-child(3) {
-  animation-delay: 0.3s;
+.agent-glyph.is-animated .agent-glyph-node {
+  animation: glyph-node 2.4s ease-out infinite;
 }
 
-@keyframes ask-dot {
-  0%,
-  80%,
-  100% {
-    opacity: 0.25;
-    transform: translateY(0);
+.agent-glyph.is-animated .agent-glyph-node--b {
+  animation-delay: 0.81s;
+}
+
+.agent-glyph.is-animated .agent-glyph-node--c {
+  animation-delay: 1.63s;
+}
+
+.agent-glyph:not(.is-animated) .agent-glyph-pulse {
+  opacity: 0;
+}
+
+@keyframes glyph-travel {
+  to {
+    stroke-dashoffset: -43.5;
   }
-  40% {
+}
+
+@keyframes glyph-node {
+  0% {
+    transform: scale(1.25);
     opacity: 1;
-    transform: translateY(-3px);
+  }
+  30%,
+  100% {
+    transform: scale(0.78);
+    opacity: 0.7;
   }
 }
 
+/* ---------- ask launcher ---------- */
+.ask-ring-text {
+  font-size: 9.2px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  fill: rgba(243, 240, 232, 0.82);
+}
+
+.ask-launcher-core {
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ask-launcher:hover .ask-launcher-core,
+.ask-launcher:focus-visible .ask-launcher-core {
+  transform: scale(1.1);
+}
+
+.ask-launcher::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 1px solid rgba(200, 220, 84, 0.45);
+  animation: ask-halo 2.8s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ask-halo {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+/* ---------- ask agent ---------- */
 .ask-panel ::-webkit-scrollbar {
   width: 6px;
 }
@@ -930,7 +984,10 @@ main:focus {
   .skills-ribbon,
   .status-ping,
   .hero-pulse,
-  .hero-scroll-icon {
+  .hero-scroll-icon,
+  .agent-glyph .agent-glyph-pulse,
+  .agent-glyph .agent-glyph-node,
+  .ask-launcher::before {
     animation: none;
   }
 

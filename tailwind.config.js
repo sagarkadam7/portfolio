@@ -16,6 +16,18 @@ export default {
         display: ["Arial", "Helvetica", "sans-serif"],
         sans: ["Arial", "Helvetica", "sans-serif"],
       },
+      // Tailwind 3 only ships 5-step opacities; without these the /12, /14, /18…
+      // modifiers used across the site are dropped and borders fall back to gray-200.
+      opacity: {
+        12: "0.12",
+        14: "0.14",
+        18: "0.18",
+        58: "0.58",
+        62: "0.62",
+        72: "0.72",
+        78: "0.78",
+        92: "0.92",
+      },
       boxShadow: {
         editorial: "0 26px 70px rgba(16, 16, 15, 0.18)",
       },

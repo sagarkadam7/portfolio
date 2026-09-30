@@ -18,7 +18,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion, useScroll, useSpring } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import AgentGlyph from "./AgentGlyph.jsx";
 import AskAgent from "./AskAgent.jsx";
@@ -56,6 +56,8 @@ function scrollToTarget(selector) {
   else target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
 }
 
+const hostOf = (url) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/.*$/, "");
+
 const formatPuneTime = () =>
   new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Kolkata",
@@ -82,6 +84,7 @@ const experience = [
     highlight: "AED SmartX + AED Inspect — live",
     body: "Building Think Health's AED products end to end: AED SmartX, a platform for tracking devices, inspections, supplies, training certifications, and compliance across sites — and AED Inspect, where AI reads photos of a defibrillator's labels and reports in minutes whether it's emergency-ready.",
     image: "/projects/aedsmartx.jpg",
+    imagePosition: "100% 50%",
     icon: HeartPulse,
     stack: ["Full Stack", "AI Vision", "Compliance", "Health Tech"],
     links: [
@@ -174,7 +177,7 @@ const projects = [
     impact:
       "AED program management platform: track devices across sites, log inspections, get supply and expiry alerts, and manage training certifications and compliance from one portal.",
     image: "/projects/aedsmartx.jpg",
-    imagePosition: "82% 40%",
+    imagePosition: "left top",
     screen: true,
     live: PROFILE.aedSmartxLive,
   },
@@ -451,6 +454,42 @@ function useMagnetic() {
 
     return () => cleanups.forEach((cleanup) => cleanup());
   }, []);
+}
+
+// Cards marked [data-spotlight] get a lime glow that tracks the pointer.
+function useSpotlight() {
+  useEffect(() => {
+    if (!hasFinePointer()) return undefined;
+
+    const onMove = (event) => {
+      const card = event.target.closest?.("[data-spotlight]");
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+      card.style.setProperty("--my", `${event.clientY - rect.top}px`);
+    };
+    document.addEventListener("pointermove", onMove, { passive: true });
+    return () => document.removeEventListener("pointermove", onMove);
+  }, []);
+}
+
+function Spotlight({ tone = "dark", fill = true }) {
+  return (
+    <>
+      {fill && <span className={`spotlight spotlight--${tone}`} aria-hidden="true" />}
+      <span className="spotlight-edge" aria-hidden="true" />
+    </>
+  );
+}
+
+// Two stacked copies of an icon: on hover the first leaves and the second takes its place.
+function SwapIcon({ icon: Icon, size = 17, strokeWidth = 3, axis = "diagonal" }) {
+  return (
+    <span className={`swap-icon swap-icon--${axis}`} style={{ width: size, height: size }} aria-hidden="true">
+      <Icon size={size} strokeWidth={strokeWidth} />
+      <Icon size={size} strokeWidth={strokeWidth} />
+    </span>
+  );
 }
 
 function Preloader() {
@@ -841,28 +880,28 @@ function Hero() {
                   className="btn-fill inline-flex items-center gap-2 rounded-full border border-signal/60 bg-signal px-6 py-3.5 text-sm font-black uppercase text-ink"
                   href="#work"
                 >
-                  View work <ArrowUpRight size={17} strokeWidth={3} />
+                  View work <SwapIcon icon={ArrowUpRight} />
                 </a>
               </span>
               <span className="hero-cta-item">
                 <button
                   type="button"
                   data-magnetic
-                  className="inline-flex items-center gap-2 rounded-full border border-signal/35 bg-white/[0.04] px-5 py-3.5 text-sm font-black uppercase text-bone transition-colors duration-300 hover:border-signal hover:text-signal"
+                  className="btn-fill btn-fill--signal inline-flex items-center gap-2 rounded-full border border-signal/35 bg-white/[0.04] px-5 py-3.5 text-sm font-black uppercase text-bone"
                   onClick={() => openAskAgent()}
                 >
-                  <AgentGlyph size={20} className="text-signal" /> Ask my AI
+                  <AgentGlyph size={20} className="btn-glyph text-signal" /> Ask my AI
                 </button>
               </span>
               <span className="hero-cta-item">
                 <a
                   data-magnetic
-                  className="inline-flex items-center gap-2 rounded-full border border-signal/25 px-5 py-3.5 text-sm font-black uppercase text-bone transition-colors duration-300 hover:border-signal hover:text-signal"
+                  className="btn-fill btn-fill--signal inline-flex items-center gap-2 rounded-full border border-signal/25 px-5 py-3.5 text-sm font-black uppercase text-bone"
                   href={PROFILE.linkedin}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  LinkedIn <Linkedin size={16} strokeWidth={3} />
+                  LinkedIn <SwapIcon icon={Linkedin} size={16} axis="vertical" />
                 </a>
               </span>
             </div>
@@ -923,9 +962,9 @@ function Hero() {
 
 function Manifesto() {
   return (
-    <section id="about" className="about-section manifesto relative overflow-hidden bg-bone px-4 py-24 text-ink md:px-10 md:py-36">
+    <section id="about" className="about-section manifesto relative overflow-clip bg-bone px-4 py-24 text-ink md:px-10 md:py-36">
       <div className="about-intro mx-auto max-w-[1500px]">
-        <div className="about-intro-head flex flex-wrap items-center justify-between gap-4 border-b border-ink/12 pb-6">
+        <div className="about-intro-head rule-draw rule-draw--ink flex flex-wrap items-center justify-between gap-4 pb-6">
           <p className="about-label text-sm font-black uppercase text-muted">About</p>
         </div>
 
@@ -1044,15 +1083,17 @@ function Manifesto() {
         {education.map((item) => (
           <motion.article
             key={item.school}
+            data-spotlight
             className="about-edu-card group relative overflow-hidden border border-ink/12 bg-paper p-6 transition-colors duration-300 hover:border-signal/40 md:p-8"
             whileHover={{ y: -3 }}
             transition={{ type: "spring", stiffness: 400, damping: 28 }}
           >
             <div className="absolute right-0 top-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-signal/10 transition-transform duration-500 group-hover:scale-150" />
-            <p className="text-xs font-black uppercase text-muted">{item.period}</p>
-            <h3 className="about-edu-title mt-3 text-xl font-black leading-tight md:text-2xl">{item.degree}</h3>
-            <p className="mt-2 text-sm font-bold text-muted">{item.school}</p>
-            <p className="mt-4 text-sm font-black uppercase text-[#6f7d10]">{item.detail}</p>
+            <Spotlight tone="light" />
+            <p className="relative text-xs font-black uppercase text-muted">{item.period}</p>
+            <h3 className="about-edu-title relative mt-3 text-xl font-black leading-tight md:text-2xl">{item.degree}</h3>
+            <p className="relative mt-2 text-sm font-bold text-muted">{item.school}</p>
+            <p className="relative mt-4 text-sm font-black uppercase text-[#6f7d10]">{item.detail}</p>
           </motion.article>
         ))}
       </div>
@@ -1168,7 +1209,7 @@ function Skills() {
     <section id="skills" className="skills-section relative overflow-hidden bg-[#080807] px-4 py-24 text-bone md:px-10 md:py-36">
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-signal/10 blur-[110px]" />
       <div className="relative mx-auto max-w-[1500px]">
-        <div className="mb-12 grid gap-8 border-b border-white/15 pb-10 lg:grid-cols-[0.36fr_1fr] lg:items-start lg:gap-14">
+        <div className="rule-draw mb-12 grid gap-8 pb-10 lg:grid-cols-[0.36fr_1fr] lg:items-start lg:gap-14">
           <div className="lg:pt-2">
             <p className="skills-label text-sm font-black uppercase text-bone/55">Skills</p>
             <p className="skills-kicker mt-5 text-xs font-black uppercase tracking-[0.18em] text-signal">
@@ -1200,6 +1241,7 @@ function Skills() {
           {skillGroups.map(({ logo, label, title, focus, image, skills }, index) => (
             <motion.article
               key={label}
+              data-spotlight
               className="skill-card group relative min-h-[360px] overflow-hidden border border-white/14 bg-white/[0.035] p-6 backdrop-blur transition-colors duration-300 hover:border-signal/40 hover:bg-white/[0.06] md:p-7"
               whileHover={{ y: -6 }}
               transition={{ type: "spring", stiffness: 360, damping: 28 }}
@@ -1208,6 +1250,7 @@ function Skills() {
               <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(8,8,7,0.96)_0%,rgba(8,8,7,0.88)_44%,rgba(8,8,7,0.66)_100%)]" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_10%,rgba(200,220,84,0.18),transparent_34%)]" />
               <div className="absolute right-0 top-0 h-28 w-28 translate-x-10 -translate-y-10 rounded-full bg-signal/10 transition-transform duration-500 group-hover:scale-150" />
+              <Spotlight />
               <div className="skill-part relative flex items-start justify-between gap-4">
                 <div className="skill-logo">
                   <SkillLogo type={logo} />
@@ -1243,11 +1286,29 @@ function Skills() {
 
 function Experience() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const listRef = useRef(null);
   const active = experience[activeIndex];
 
+  // The role crossing the middle of the viewport becomes active, so the
+  // preview follows the scroll as well as the pointer.
+  useEffect(() => {
+    const rows = listRef.current?.querySelectorAll(".experience-row");
+    if (!rows?.length) return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveIndex(Number(entry.target.dataset.index));
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+    rows.forEach((row) => observer.observe(row));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="experience" className="experience-section relative overflow-hidden bg-[#080807] px-4 py-24 text-bone md:px-10 md:py-36">
-      <div className="relative mb-12 grid gap-8 border-b border-white/15 pb-10 md:mb-14 lg:grid-cols-[0.36fr_1fr] lg:items-start lg:gap-14">
+    <section id="experience" className="experience-section relative overflow-clip bg-[#080807] px-4 py-24 text-bone md:px-10 md:py-36">
+      <div className="rule-draw relative mb-12 grid gap-8 pb-10 md:mb-14 lg:grid-cols-[0.36fr_1fr] lg:items-start lg:gap-14">
         <div className="lg:pt-2">
           <p className="experience-label text-sm font-black uppercase text-bone/55">Experience</p>
           <p className="experience-kicker mt-5 text-xs font-black uppercase tracking-[0.18em] text-signal">
@@ -1263,13 +1324,15 @@ function Experience() {
           className="experience-timeline pointer-events-none absolute -left-5 bottom-0 top-0 hidden w-px origin-top bg-gradient-to-b from-signal via-white/25 to-transparent md:block"
           aria-hidden="true"
         />
-        <div className="experience-list grid gap-4">
+        <div ref={listRef} className="experience-list grid gap-4">
           {experience.map((role, index) => {
             const Icon = role.icon;
             const isActive = index === activeIndex;
             return (
               <motion.article
                 key={role.company}
+                data-index={index}
+                data-spotlight
                 className={`experience-row group relative cursor-pointer overflow-hidden border backdrop-blur-sm transition-colors duration-500 ${
                   isActive
                     ? "border-signal/50 bg-white/[0.07]"
@@ -1278,18 +1341,19 @@ function Experience() {
                 onMouseEnter={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
                 tabIndex={0}
-                layout
                 whileHover={{ y: -4 }}
                 transition={{ type: "spring", stiffness: 420, damping: 28 }}
               >
                 <img
                   className={`experience-bg absolute inset-0 h-full w-full object-cover transition-all duration-700 ${
-                    isActive ? "scale-105 opacity-35" : "scale-110 opacity-0 group-hover:opacity-20"
+                    isActive ? "scale-105 opacity-25" : "scale-110 opacity-0 group-hover:opacity-15"
                   }`}
+                  style={role.imagePosition ? { objectPosition: role.imagePosition } : undefined}
                   src={role.image}
                   alt=""
                 />
-                <motion.div className="absolute inset-0 bg-gradient-to-r from-[#080807] via-[#080807]/92 to-[#080807]/55" aria-hidden="true" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#080807] via-[#080807]/92 to-[#080807]/60" aria-hidden="true" />
+                <Spotlight />
 
                 <div className="experience-part relative grid gap-6 p-6 md:grid-cols-[92px_1fr] md:p-8">
                   <div className="flex items-start justify-between md:flex-col md:justify-start md:gap-4">
@@ -1363,7 +1427,7 @@ function Experience() {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          {link.label} <ArrowUpRight size={13} strokeWidth={3} />
+                          {link.label} <SwapIcon icon={ArrowUpRight} size={13} />
                         </a>
                       ))}
                     </div>
@@ -1381,24 +1445,60 @@ function Experience() {
           })}
         </div>
 
-        <motion.aside
-          className="experience-preview relative hidden min-h-[420px] overflow-hidden border border-white/15 lg:block"
-          key={active.company}
-          initial={{ opacity: 0, scale: 1.04 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <img className="experience-preview-img h-full w-full object-cover" src={active.image} alt="" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10" />
-          <div className="absolute inset-0 flex flex-col justify-between p-7">
-            <p className="text-xs font-black uppercase text-signal">{active.highlight}</p>
-            <div>
-              <p className="text-sm font-black uppercase text-bone/60">{active.period}</p>
-              <h3 className="mt-2 text-4xl font-black leading-none">{active.company}</h3>
-              <p className="mt-3 text-lg font-bold leading-tight text-bone/75">{active.role}</p>
-            </div>
+        <aside className="experience-preview relative hidden lg:block">
+          <div className="sticky top-24 h-[min(600px,calc(100svh-8rem))] overflow-hidden border border-white/15 bg-[#0c0c0b]">
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={active.company}
+                className="absolute inset-0"
+                initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
+                animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+                exit={{ scale: 1.06, transition: { duration: 0.9 } }}
+                transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
+              >
+                <motion.div
+                  className="h-full w-full"
+                  initial={{ scale: 1.22 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <img
+                    className="experience-preview-img h-full w-full object-cover"
+                    style={active.imagePosition ? { objectPosition: active.imagePosition } : undefined}
+                    src={active.image}
+                    alt=""
+                  />
+                </motion.div>
+              </motion.div>
+            </AnimatePresence>
+            <div className="experience-preview-shade pointer-events-none absolute inset-0 z-10" aria-hidden="true" />
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={active.company}
+                className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-7"
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.16em] tabular-nums">
+                  <span>
+                    <span className="text-signal">{String(activeIndex + 1).padStart(2, "0")}</span>
+                    <span className="text-bone/45"> / {String(experience.length).padStart(2, "0")}</span>
+                  </span>
+                  <span className="h-px w-8 bg-white/25" aria-hidden="true" />
+                  {active.current && <span className="rounded-full bg-signal px-2.5 py-1 text-ink">Current role</span>}
+                </p>
+                <p className="mt-5 text-xs font-black uppercase tracking-[0.12em] text-signal">{active.highlight}</p>
+                <h3 className="mt-3 text-[clamp(28px,2.6vw,40px)] font-black leading-[0.95]">{active.company}</h3>
+                <p className="mt-3 text-base font-bold leading-snug text-bone/75">{active.role}</p>
+                <p className="mt-4 text-[11px] font-black uppercase tracking-[0.14em] text-bone/45">
+                  {active.period}
+                </p>
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </motion.aside>
+        </aside>
       </div>
     </section>
   );
@@ -1407,7 +1507,7 @@ function Experience() {
 function Stack() {
   return (
     <section id="stack" className="stack-section bg-[#080807] px-4 py-24 text-bone md:px-10 md:py-36">
-      <div className="mb-12 grid gap-8 border-b border-white/15 pb-10 md:mb-14 lg:grid-cols-[0.36fr_1fr] lg:items-start lg:gap-14">
+      <div className="rule-draw mb-12 grid gap-8 pb-10 md:mb-14 lg:grid-cols-[0.36fr_1fr] lg:items-start lg:gap-14">
         <div className="lg:pt-2">
           <p className="stack-label text-sm font-black uppercase text-bone/55">What I bring</p>
           <p className="stack-kicker mt-5 text-xs font-black uppercase tracking-[0.18em] text-signal">
@@ -1429,9 +1529,11 @@ function Stack() {
         {stackPillars.map(({ logo, title, body, tools }, index) => (
           <article
             key={title}
+            data-spotlight
             className="stack-card group relative flex min-h-[360px] flex-col border border-white/15 bg-white/[0.035] p-6 backdrop-blur md:p-7"
           >
-            <div className="stack-part flex items-start justify-between gap-4">
+            <Spotlight />
+            <div className="stack-part relative flex items-start justify-between gap-4">
               <div className="stack-logo">
                 <SkillLogo type={logo} />
               </div>
@@ -1440,15 +1542,15 @@ function Stack() {
               </span>
             </div>
 
-            <h3 className="stack-part mt-8 text-[clamp(21px,2.1vw,27px)] font-black uppercase leading-[0.95]">
+            <h3 className="stack-part relative mt-8 text-[clamp(21px,2.1vw,27px)] font-black uppercase leading-[0.95]">
               {title}
             </h3>
 
-            <p className="stack-part mt-4 flex-1 text-[15px] font-bold leading-relaxed text-bone/60">
+            <p className="stack-part relative mt-4 flex-1 text-[15px] font-bold leading-relaxed text-bone/60">
               {body}
             </p>
 
-            <div className="stack-part mt-7 flex flex-wrap gap-2 border-t border-white/12 pt-5">
+            <div className="stack-part relative mt-7 flex flex-wrap gap-2 border-t border-white/12 pt-5">
               {tools.map((tool) => (
                 <span
                   key={tool}
@@ -1468,7 +1570,7 @@ function Stack() {
 function Services() {
   return (
     <section className="service-section bg-paper px-4 py-24 text-ink md:px-10 md:py-36">
-      <div className="service-head mb-12 border-b border-ink/15 pb-8 md:mb-16 md:pb-10">
+      <div className="service-head rule-draw rule-draw--ink mb-12 pb-8 md:mb-16 md:pb-10">
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
           <div>
             <p className="service-head-label mb-5 text-sm font-black uppercase text-muted">
@@ -1539,7 +1641,7 @@ function Services() {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        {service.proof} <ArrowUpRight size={13} strokeWidth={3} />
+                        {service.proof} <SwapIcon icon={ArrowUpRight} size={13} />
                       </a>
                     ) : (
                       service.proof
@@ -1572,7 +1674,7 @@ function Services() {
 function Work() {
   return (
     <section id="work" className="work-section overflow-hidden bg-ink text-bone">
-      <div className="work-pin flex min-h-screen flex-col justify-center px-4 py-20 md:px-10 md:py-24">
+      <div className="work-pin flex min-h-screen flex-col justify-center px-4 py-20 md:px-10 md:py-24 lg:py-[72px]">
         <div className="mb-8 grid gap-6 md:mb-10 lg:grid-cols-[0.36fr_1fr] lg:items-end lg:gap-14">
           <div className="work-meta">
             <p className="work-meta-item text-sm font-black uppercase text-bone/60">Featured Work</p>
@@ -1598,19 +1700,45 @@ function Work() {
             return (
               <article
                 key={project.title}
-                className="project-card group relative isolate grid h-[clamp(420px,52vh,620px)] w-[84vw] shrink-0 content-end overflow-hidden rounded-[2px] p-5 sm:w-[72vw] md:w-[42vw] md:p-7 xl:w-[36vw]"
+                data-spotlight
+                className={`project-card group relative isolate grid h-[clamp(420px,58vh,640px)] w-[84vw] shrink-0 content-end overflow-hidden rounded-[2px] border border-white/10 bg-[#0d0d0c] p-5 sm:w-[72vw] md:w-[42vw] md:p-7 xl:w-[36vw] ${
+                  project.screen ? "project-card--screen" : ""
+                }`}
               >
-                <img
-                  className={`project-img absolute inset-0 -z-20 h-full w-full object-cover object-center ${
-                    project.screen ? "project-img--screen" : ""
-                  }`}
-                  style={project.imagePosition ? { objectPosition: project.imagePosition } : undefined}
-                  src={project.image}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/20 to-black/5" />
+                {project.screen ? (
+                  // Product screenshots are light UIs: show them crisp in a browser frame
+                  // rather than dimming them into a backdrop.
+                  <div className="project-frame absolute inset-x-5 bottom-0 top-5 -z-20 overflow-hidden rounded-t-[10px] border border-b-0 border-white/12 bg-[#161614] md:inset-x-7 md:top-7">
+                    <div className="flex h-8 items-center gap-1.5 border-b border-white/10 px-3" aria-hidden="true">
+                      <span className="h-2 w-2 rounded-full bg-white/20" />
+                      <span className="h-2 w-2 rounded-full bg-white/20" />
+                      <span className="h-2 w-2 rounded-full bg-white/20" />
+                      <span className="ml-3 truncate text-[10px] font-bold tracking-[0.04em] text-bone/45">
+                        {hostOf(project.live)}
+                      </span>
+                    </div>
+                    <div className="h-[calc(100%-2rem)] overflow-hidden">
+                      <img
+                        className="project-img project-img--screen h-full w-full object-cover object-top"
+                        style={project.imagePosition ? { objectPosition: project.imagePosition } : undefined}
+                        src={project.image}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    className="project-img absolute inset-0 -z-20 h-full w-full object-cover object-center"
+                    style={project.imagePosition ? { objectPosition: project.imagePosition } : undefined}
+                    src={project.image}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+                <Spotlight fill={false} />
                 <a
                   className="absolute inset-0 z-10"
                   href={primaryHref}
@@ -1619,33 +1747,43 @@ function Work() {
                   aria-label={`Open ${project.title}`}
                   data-cursor-label="View"
                 />
-                <div className="mb-5 flex items-center justify-between border-b border-white/30 pb-4 text-xs font-black uppercase md:text-sm">
-                  <span className="text-signal">{String(position + 1).padStart(2, "0")}</span>
-                  <span>{project.type}</span>
-                </div>
-                <h3 className="text-[clamp(28px,3vw,48px)] font-black leading-[0.92]">{project.title}</h3>
-                <p className="mt-4 max-w-xl text-[15px] font-bold leading-snug text-white/85 md:text-base">
-                  {project.impact}
-                </p>
-                <div className="relative z-20 mt-5 flex flex-wrap items-center gap-2.5">
-                  <span className="mr-1 text-[11px] font-black uppercase tracking-[0.06em] text-white/75">
-                    {project.stack}
-                  </span>
-                  {project.live && (
-                    <a className="project-btn project-btn--primary" href={project.live} target="_blank" rel="noreferrer">
-                      Live <ArrowUpRight size={14} strokeWidth={3} />
-                    </a>
-                  )}
-                  {project.repo && (
-                    <a className="project-btn" href={project.repo} target="_blank" rel="noreferrer">
-                      Code <ExternalLink size={13} strokeWidth={3} />
-                    </a>
-                  )}
-                  {!project.live && !project.repo && (
-                    <a className="project-btn" href={project.href}>
-                      See role <ArrowUpRight size={14} strokeWidth={3} />
-                    </a>
-                  )}
+                <div className="project-body">
+                  <div className="mb-5 flex items-center justify-between border-b border-white/20 pb-4 text-xs font-black uppercase md:text-sm">
+                    <span className="text-signal">{String(position + 1).padStart(2, "0")}</span>
+                    <span className="flex items-center gap-2">
+                      {project.live && (
+                        <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                          <span className="status-ping absolute inline-flex h-full w-full rounded-full bg-signal" />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+                        </span>
+                      )}
+                      {project.type}
+                    </span>
+                  </div>
+                  <h3 className="text-[clamp(28px,3vw,48px)] font-black leading-[0.92]">{project.title}</h3>
+                  <p className="mt-4 max-w-xl text-[15px] font-bold leading-snug text-white/80 md:text-base">
+                    {project.impact}
+                  </p>
+                  <div className="relative z-20 mt-5 flex flex-wrap items-center gap-2.5">
+                    <span className="mr-1 text-[11px] font-black uppercase tracking-[0.06em] text-white/60">
+                      {project.stack}
+                    </span>
+                    {project.live && (
+                      <a className="project-btn project-btn--primary" href={project.live} target="_blank" rel="noreferrer">
+                        Live <SwapIcon icon={ArrowUpRight} size={14} />
+                      </a>
+                    )}
+                    {project.repo && (
+                      <a className="project-btn" href={project.repo} target="_blank" rel="noreferrer">
+                        Code <SwapIcon icon={ExternalLink} size={13} />
+                      </a>
+                    )}
+                    {!project.live && !project.repo && (
+                      <a className="project-btn" href={project.href}>
+                        See role <SwapIcon icon={ArrowUpRight} size={14} />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </article>
             );
@@ -1756,28 +1894,28 @@ function Closing() {
           <div className="closing-part flex flex-wrap gap-3">
             <a
               data-magnetic
-              className="inline-flex w-fit items-center gap-3 rounded-full bg-ink px-6 py-4 text-sm font-black uppercase text-bone transition-colors duration-300 hover:bg-[#2b2b27]"
+              className="btn-fill btn-fill--signal inline-flex w-fit items-center gap-3 rounded-full border border-ink bg-ink px-6 py-4 text-sm font-black uppercase text-bone"
               href={PROFILE.linkedin}
               target="_blank"
               rel="noreferrer"
             >
-              Message on LinkedIn <Linkedin size={18} strokeWidth={3} />
+              Message on LinkedIn <SwapIcon icon={Linkedin} size={18} axis="vertical" />
             </a>
             <a
               data-magnetic
-              className="inline-flex w-fit items-center gap-3 rounded-full border border-ink/25 px-6 py-4 text-sm font-black uppercase text-ink transition-colors duration-300 hover:border-ink"
+              className="btn-fill btn-fill--ink inline-flex w-fit items-center gap-3 rounded-full border border-ink/25 px-6 py-4 text-sm font-black uppercase text-ink"
               href={`mailto:${PROFILE.email}`}
             >
-              Email me <Mail size={18} strokeWidth={3} />
+              Email me <SwapIcon icon={Mail} size={18} axis="vertical" />
             </a>
             <a
               data-magnetic
-              className="inline-flex w-fit items-center gap-3 rounded-full border border-ink/25 px-6 py-4 text-sm font-black uppercase text-ink transition-colors duration-300 hover:border-ink"
+              className="btn-fill btn-fill--ink inline-flex w-fit items-center gap-3 rounded-full border border-ink/25 px-6 py-4 text-sm font-black uppercase text-ink"
               href={PROFILE.mockInterviewLive}
               target="_blank"
               rel="noreferrer"
             >
-              Live demo <ArrowUpRight size={18} strokeWidth={3} />
+              Live demo <SwapIcon icon={ArrowUpRight} size={18} />
             </a>
           </div>
         </div>
@@ -1821,12 +1959,12 @@ function Footer() {
             ].map(([label, href]) => (
               <a
                 key={label}
-                className="inline-flex items-center gap-1 transition-colors duration-300 hover:text-signal"
+                className="link-draw inline-flex items-center gap-1 transition-colors duration-300 hover:text-signal"
                 href={href}
                 target="_blank"
                 rel="noreferrer"
               >
-                {label} <ExternalLink size={14} strokeWidth={3} />
+                {label} <SwapIcon icon={ExternalLink} size={14} />
               </a>
             ))}
           </div>
@@ -1842,10 +1980,11 @@ function Footer() {
         </div>
       </div>
 
-      <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-[11px] font-black uppercase tracking-[0.12em] text-bone/40">
+      {/* Right padding keeps "Back to top" clear of the floating Ask launcher. */}
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pr-24 pt-6 text-[11px] font-black uppercase tracking-[0.12em] text-bone/40 md:pr-36">
         <span>© {new Date().getFullYear()} Sagar Kadam · Designed &amp; engineered in Pune</span>
         <a className="inline-flex items-center gap-2 transition-colors duration-300 hover:text-signal" href="#top">
-          Back to top <ArrowUp size={14} strokeWidth={3} />
+          Back to top <SwapIcon icon={ArrowUp} size={14} axis="vertical" />
         </a>
       </div>
     </footer>
@@ -1900,6 +2039,23 @@ function useGsapAnimations(rootRef) {
               }),
           });
         });
+      };
+
+      // Section-head hairlines draw in from the left. Called per section so
+      // ScrollTriggers keep being created in document order around the Work pin.
+      const drawRule = (scope) => {
+        const rule = document.querySelector(`${scope} .rule-draw`);
+        if (!rule) return;
+        gsap.fromTo(
+          rule,
+          { "--rule": 0 },
+          {
+            "--rule": 1,
+            duration: 1.4,
+            ease: "expo.inOut",
+            scrollTrigger: { trigger: rule, start: "top 82%" },
+          },
+        );
       };
 
       // ---------- initial states ----------
@@ -2056,6 +2212,8 @@ function useGsapAnimations(rootRef) {
       }
 
       // ---------- about ----------
+      drawRule(".about-section");
+
       gsap.to(".about-label", {
         y: 0,
         opacity: 1,
@@ -2141,6 +2299,7 @@ function useGsapAnimations(rootRef) {
       });
 
       // ---------- skills ----------
+      drawRule(".skills-section");
       revealLines(".skills-title", ".skills-section", "top 72%");
 
       gsap.to(".skills-label, .skills-kicker, .skills-lead, .skills-marquee", {
@@ -2188,6 +2347,8 @@ function useGsapAnimations(rootRef) {
       });
 
       // ---------- experience ----------
+      drawRule(".experience-section");
+
       gsap.to(".experience-label, .experience-kicker", {
         y: 0,
         opacity: 1,
@@ -2277,11 +2438,15 @@ function useGsapAnimations(rootRef) {
           scrollTrigger: { trigger: ".work-section", start: "top 70%" },
         });
 
+        const pinned = window.matchMedia("(min-width: 1024px)").matches;
+        // When pinned, photos settle oversized so they have room to drift inside the card.
+        const photoScale = pinned ? 1.16 : 1.02;
+
         gsap.fromTo(
           ".project-img",
-          { scale: 1.28 },
+          { scale: 1.32 },
           {
-            scale: 1.02,
+            scale: (index, image) => (image.classList.contains("project-img--screen") ? 1 : photoScale),
             duration: 1.8,
             stagger: 0.12,
             ease: "expo.out",
@@ -2289,8 +2454,8 @@ function useGsapAnimations(rootRef) {
           },
         );
 
-        if (window.matchMedia("(min-width: 1024px)").matches) {
-          gsap.to(track, {
+        if (pinned) {
+          const horizontal = gsap.to(track, {
             x: () => -Math.max(0, track.scrollWidth - window.innerWidth + 40),
             ease: "none",
             scrollTrigger: {
@@ -2304,10 +2469,32 @@ function useGsapAnimations(rootRef) {
               onUpdate: (self) => gsap.set(".work-progress", { scaleX: self.progress }),
             },
           });
+
+          gsap.utils.toArray(".project-card").forEach((card) => {
+            const photo = card.querySelector(".project-img:not(.project-img--screen)");
+            if (!photo) return;
+            gsap.fromTo(
+              photo,
+              { xPercent: -6 },
+              {
+                xPercent: 6,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  containerAnimation: horizontal,
+                  start: "left right",
+                  end: "right left",
+                  scrub: true,
+                },
+              },
+            );
+          });
         }
       }
 
       // ---------- capabilities (services) ----------
+      drawRule(".service-section");
+
       gsap.to(".service-head-label, .service-head-lead", {
         y: 0,
         opacity: 1,
@@ -2329,8 +2516,20 @@ function useGsapAnimations(rootRef) {
         },
       );
 
-      gsap.utils.toArray(".service-card").forEach((card) => {
+      gsap.utils.toArray(".service-card").forEach((card, index) => {
         const image = card.querySelector(".service-image");
+
+        // The photo wipes open from the card's outer edge as the row slides in.
+        gsap.fromTo(
+          card.querySelector(".service-image-wrap"),
+          { clipPath: index % 2 === 1 ? "inset(0% 100% 0% 0%)" : "inset(0% 0% 0% 100%)" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 1.3,
+            ease: "expo.inOut",
+            scrollTrigger: { trigger: card, start: "top 78%" },
+          },
+        );
 
         gsap.to(card, {
           x: 0,
@@ -2386,6 +2585,8 @@ function useGsapAnimations(rootRef) {
       });
 
       // ---------- stack ----------
+      drawRule(".stack-section");
+
       gsap.fromTo(
         ".stack-title",
         { clipPath: "inset(0 100% 0 0)", x: -40 },
@@ -2548,30 +2749,34 @@ export default function App() {
   useSmoothScroll(motionEnabled);
   useGsapAnimations(rootRef);
   useMagnetic();
+  useSpotlight();
 
   return (
-    <div ref={rootRef} className="min-h-screen bg-bone font-display text-ink">
-      <a href="#main" className="skip-link">
-        Skip to content
-      </a>
-      {showIntro && <Preloader />}
-      <ScrollProgress />
-      <Cursor />
-      <Header menuOpen={menuOpen} onToggleMenu={toggleMenu} />
-      <MobileMenu open={menuOpen} onClose={closeMenu} />
-      <main id="main" tabIndex={-1}>
-        <Hero />
-        <Manifesto />
-        <Skills />
-        <Experience />
-        <Work />
-        <Services />
-        <Stack />
-        <Principles />
-        <Closing />
-      </main>
-      <Footer />
-      <AskAgent />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div ref={rootRef} className="min-h-screen bg-bone font-display text-ink">
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
+        {showIntro && <Preloader />}
+        <ScrollProgress />
+        <Cursor />
+        <div className="grain" aria-hidden="true" />
+        <Header menuOpen={menuOpen} onToggleMenu={toggleMenu} />
+        <MobileMenu open={menuOpen} onClose={closeMenu} />
+        <main id="main" tabIndex={-1}>
+          <Hero />
+          <Manifesto />
+          <Skills />
+          <Experience />
+          <Work />
+          <Services />
+          <Stack />
+          <Principles />
+          <Closing />
+        </main>
+        <Footer />
+        <AskAgent />
+      </div>
+    </MotionConfig>
   );
 }
